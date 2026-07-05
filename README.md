@@ -14,10 +14,38 @@ Evidence-based speed-reading training with a comprehension gate: speed only coun
 - **Pacer drill** — moving highlight sweeps normal text in 1–4 word chunks (regression suppression that transfers to real pages).
 - **Progress** — WPM chart (session line + 7-session rolling average + comfort reference line, with legend) and comprehension bar chart (only quizzed sessions), baseline/best/gain stats, full session table, and **JSON export/import** of all data. The Plan tab also shows a **daily streak** with a last-session nudge.
 
+## Passages & difficulty tiers
+
+All 12 passages are original, ~250–280 words, each with a 4-question comprehension quiz. The tier tells you **how to use** each one — the app surfaces it in every passage selector and defaults speed tests to standard-tier material.
+
+| Tier | Use it for | Reading demand |
+|---|---|---|
+| **Easy** | Drills (RSVP, pacer) — practice on words you already know | Concrete narrative, familiar vocabulary |
+| **Standard** | Speed tests — your real, logged progress measure | General nonfiction, moderate density |
+| **Dense** | Occasional stretch tests | Technical / abstract, higher cognitive load |
+
+The training logic: **drill on easy, test on standard, stretch on dense.** Re-reading a passage inflates its comprehension score, so a full 4-week cycle should never repeat one — hence 12.
+
+| # | Passage | Tier | Words |
+|---|---|---|---:|
+| 1 | Eighteen Months of the Pony Express | Easy | 263 |
+| 2 | How Bees Vote With Their Bodies | Easy | 257 |
+| 3 | The Invisible Livestock in Sourdough | Easy | 249 |
+| 4 | The Keyboard That Was Never Meant to Be Fast | Easy | 251 |
+| 5 | The Distributed Mind of the Octopus | Standard | 264 |
+| 6 | The Box That Shrank the World | Standard | 265 |
+| 7 | The Map That Lies About Size | Standard | 257 |
+| 8 | Why the Brain Cleans House at Night | Standard | 252 |
+| 9 | The Animal That Can Stop Being Alive | Standard | 260 |
+| 10 | Why Roman Concrete Outlasts Ours | Dense | 260 |
+| 11 | The Clock That Found Longitude | Dense | 280 |
+| 12 | The City Built on a Forest of Trees | Dense | 251 |
+
+**Tier mix:** 4 easy · 5 standard · 3 dense. RSVP and pacer drills also accept any pasted text (untiered).
+
 ## Notes
 
 - All data in `localStorage` (`tempo-log-v1`, `tempo-comfort-v1`, `tempo-theme`); nothing leaves the page.
-- Twelve built-in test passages with quizzes; RSVP/pacer also accept pasted text.
 - Light/dark themes via CSS tokens; follows OS preference, toggle overrides (persisted).
 - See `ROADMAP.md` and the repo's Issues tab for what's planned next (streaks, PWA, quiz-any-text).
 
