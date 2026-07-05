@@ -12,7 +12,7 @@ Evidence-based speed-reading training with a comprehension gate: speed only coun
 - **Speed test** — timed natural reading of a built-in passage + 4-question quiz → measured wpm + comprehension %, auto-logged. Seeds/updates comfort speed and rejects implausibly fast reads (>1200 wpm) so a misclick can't poison your baseline. **Twelve** passages, each tiered easy/standard/dense.
 - **RSVP sprints** — words flashed at a fixed point with the optimal-recognition-point letter in red (Spritz-style), 150–800 wpm, chunk size 1–3, punctuation/long-word pauses. Space = play/pause, ←/→ = speed ±25.
 - **Pacer drill** — moving highlight sweeps normal text in 1–4 word chunks (regression suppression that transfers to real pages).
-- **Progress** — WPM line chart + comprehension bar chart (only quizzed sessions), baseline/best/gain stats, full session table.
+- **Progress** — WPM chart (session line + 7-session rolling average + comfort reference line, with legend) and comprehension bar chart (only quizzed sessions), baseline/best/gain stats, full session table, and **JSON export/import** of all data. The Plan tab also shows a **daily streak** with a last-session nudge.
 
 ## Notes
 

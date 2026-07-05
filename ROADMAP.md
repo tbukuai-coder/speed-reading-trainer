@@ -2,20 +2,21 @@
 
 Ordered by training value, not feature count. The guiding principle: the app should stay **honest** (speed only counts with comprehension), **zero-dependency**, and **static-hostable** on GitHub Pages.
 
-## v1.1 — Close the training loop  ⟵ in progress
+## v1.1 — Close the training loop  ✅ shipped
 
-- [ ] **Tracked comfort speed.** Store comfort speed in localStorage, seed it from the first speed test, and apply the progression rule automatically (two tests ≥75% → +10%; any test <60% → −10%). Surface it on the Plan tab and pre-set the sprint sliders to comfort +25% / +50% / +10%. Removes the mental arithmetic from the protocol.
-- [ ] **Guided daily session.** A "Start today's session" flow that walks through the 15 minutes — pacer warm-up → three RSVP rounds at derived speeds → test on alternate days — with a per-step timer.
-- [ ] **More passages (~12–15).** Three quizzes get exhausted in week one; a full 4-week cycle must never repeat a passage (re-reading inflates scores).
+- [x] **Tracked comfort speed.** Stored in localStorage, seeded from the first speed test, auto-adjusted by the progression rule (two tests ≥75% → +10%; any test <60% → −10%). Shown on the Plan tab with the three derived sprint speeds; sprint sliders pre-set from it.
+- [x] **Guided daily session.** "Start today's session" walks through pacer warm-up → three RSVP rounds → alternate-day test via a fixed session bar with per-step progress.
+- [x] **More passages.** Expanded 3 → 12, each tagged easy / standard / dense.
+- [x] **Implausible-read guard.** Tests over 1200 wpm are rejected so a misclick can't poison the baseline.
 
-## v1.2 — Habit and honesty
+## v1.2 — Habit and honesty  ✅ shipped
 
-- [ ] Streak counter + "last session" nudge on the Plan tab.
-- [ ] Comfort-speed line + 7-session rolling average overlaid on the WPM chart, so the trend reads through the noise.
-- [ ] Passage difficulty tiers (easy / standard / dense): drill on easy, test on standard.
-- [ ] JSON export / import of the session log, so data survives switching browser or device.
+- [x] Streak counter + "last session" nudge on the Plan tab.
+- [x] Comfort-speed reference line + 7-session rolling average overlaid on the WPM chart, with a legend.
+- [x] Passage difficulty tiers surfaced in the selectors; tests default to standard-tier material.
+- [x] JSON export / import of the session log (with validation), so data survives switching browser or device.
 
-## v1.3 — Real mobile app
+## v1.3 — Real mobile app  ⟵ next
 
 - [ ] PWA manifest + service worker: installable to the home screen, works offline. Cheap given it's already static HTML, and daily-habit apps live on the phone.
 - [ ] Touch controls for RSVP (tap = pause, swipe = speed).
