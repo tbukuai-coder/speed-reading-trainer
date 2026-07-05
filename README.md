@@ -1,5 +1,7 @@
 # Tempo — Speed Reading Trainer
 
+**Live app: https://tbukuai-coder.github.io/speed-reading-trainer/**
+
 Single-file static HTML app, zero dependencies, no build step. Open `index.html` in any browser.
 
 ## What it does
