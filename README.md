@@ -14,6 +14,24 @@ Evidence-based speed-reading training with a comprehension gate: speed only coun
 - **Pacer drill** — moving highlight sweeps normal text in 1–4 word chunks (regression suppression that transfers to real pages).
 - **Progress** — WPM chart (session line + 7-session rolling average + comfort reference line, with legend) and comprehension bar chart (only quizzed sessions), baseline/best/gain stats, full session table, and **JSON export/import** of all data. The Plan tab also shows a **daily streak** with a last-session nudge.
 
+## How fast is fast? Reading-speed benchmarks
+
+Reading rate is conventionally measured in **words per minute (WPM)**, not per second (nobody reads a whole page per second — that would be ~15,000 WPM). These bands classify a reader *at normal comprehension*; the numbers come from the same literature the app cites (Brysbaert 2019 meta-analysis; Rayner et al. 2016).
+
+| Level | Words/min | ≈ Words/sec | ≈ Pages/min\* | What it is |
+|---|---|---:|---:|---|
+| Beginning / studying | 100–150 | 1.7–2.5 | 0.4–0.6 | Learning readers, or careful study of hard material |
+| Below average | 150–200 | 2.5–3.3 | 0.6–0.8 | Slower adult reading |
+| **Average adult** | **200–300** | **3.3–5.0** | **0.8–1.2** | Typical silent reading with full comprehension (~238 WPM for non-fiction, Brysbaert 2019) |
+| Above average | 300–400 | 5.0–6.7 | 1.2–1.6 | Proficient, practiced readers |
+| Fast (still *reading*) | 400–600 | 6.7–10 | 1.6–2.4 | Upper edge of genuine reading; comprehension starts dropping past ~500–600 (Rayner 2016) |
+| Skimming / scanning | 600–1000+ | 10–17+ | 2.4–4+ | Not full reading — extracting gist; comprehension materially reduced |
+| "Speed-reading" claims | 1000–20,000 | — | — | Marketing territory; controlled tests don't support these *with* comprehension |
+
+\* Assuming ~250–300 words per typical book page.
+
+**The catch that makes this app what it is:** a WPM number is only meaningful *at a stated comprehension level*. "600 WPM" at 40% recall is not faster reading than "300 WPM" at 95% — it's skimming with a worse outcome. That's why every speed here is paired with a quiz, and why the honest target is to move up a band *while holding ≥75% comprehension*, not to chase the raw number. Realistic trained improvement is roughly one band (20–50%), not a leap into the "speed-reading" row.
+
 ## Passages & difficulty tiers
 
 All 12 passages are original, ~250–280 words, each with a 4-question comprehension quiz. The tier tells you **how to use** each one — the app surfaces it in every passage selector and defaults speed tests to standard-tier material.
