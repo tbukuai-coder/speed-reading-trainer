@@ -226,6 +226,71 @@
   .verdict.pass { color: var(--good); }
   .verdict.fail { color: var(--bad); }
 
+  /* ---------- comfort panel ---------- */
+  .comfort-card {
+    background: var(--accent-soft); border: 1px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0;
+    padding: 16px 20px; margin: 4px 0 18px;
+  }
+  .comfort-card .top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .comfort-card .big {
+    font-family: var(--serif); font-size: 2.1rem; font-weight: 700; line-height: 1;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  .comfort-card .big small { font-size: 0.4em; font-weight: 400; color: var(--ink-2); }
+  .comfort-card .cap {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3);
+  }
+  .comfort-card .say { color: var(--ink-2); font-size: 0.92rem; margin: 10px 0 0; max-width: 60ch; }
+  .comfort-card .say .delta { font-weight: 600; }
+  .comfort-card .delta.up { color: var(--good); }
+  .comfort-card .delta.down { color: var(--bad); }
+  .speed-pills { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 0; }
+  .speed-pill {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 14px; font-variant-numeric: tabular-nums; min-width: 96px;
+  }
+  .speed-pill .pn { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+  .speed-pill .pv { font-family: var(--serif); font-weight: 700; font-size: 1.15rem; }
+  .speed-pill .pv small { font-size: 0.62em; font-weight: 400; color: var(--ink-3); }
+
+  /* ---------- session launcher ---------- */
+  .launcher {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px 20px; margin: 0 0 20px;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  }
+  .launcher .lx-main { flex: 1; min-width: 200px; }
+  .launcher h3 { margin: 0 0 4px; font-size: 1.1rem; }
+  .launcher p { margin: 0; font-size: 0.9rem; color: var(--ink-2); }
+  .launcher .btn { white-space: nowrap; }
+  .launcher .plan-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .plan-chip {
+    font-size: 0.74rem; padding: 2px 9px; border-radius: 99px;
+    border: 1px solid var(--line); color: var(--ink-2); font-variant-numeric: tabular-nums;
+  }
+  .plan-chip.test { border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- session bar ---------- */
+  #session-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: var(--surface); border-top: 1px solid var(--line);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
+  }
+  .sb-inner {
+    max-width: 780px; margin: 0 auto; padding: 11px 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .sb-step { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .sb-count { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); white-space: nowrap; }
+  .sb-name { font-weight: 600; }
+  .sb-detail { font-size: 0.85rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .sb-actions { display: flex; gap: 8px; }
+  .sb-actions .btn { padding: 6px 12px; font-size: 0.85rem; }
+  .sb-progress { height: 3px; background: var(--line); }
+  .sb-progress > div { height: 100%; width: 0%; background: var(--accent); transition: width 0.25s ease; }
+  body.session-open .wrap { padding-bottom: 96px; }
+
   /* ---------- plan tab ---------- */
   .session-steps { list-style: none; padding: 0; margin: 0; counter-reset: step; }
   .session-steps li {
@@ -305,6 +370,9 @@
   <h2>Train speed without losing the plot</h2>
   <p class="lede">Fifteen minutes a day. Speed goes up only when comprehension stays up — that gate is the whole method.</p>
 
+  <div id="comfort-panel"></div>
+  <div id="session-launcher"></div>
+
   <div class="note">
     <strong>What the research actually says.</strong> Typical adults read 200–400 words per minute. Controlled studies (Rayner et&nbsp;al., 2016) find comprehension drops sharply past ~500–600 wpm — the bottleneck is language processing, not eye speed. Realistic gains from training are 20–50%, mostly from cutting habitual re-reading, widening your fixation span, and reading more. That's what this app trains. Anyone promising 1,000+ wpm with full comprehension is selling skimming.
   </div>
@@ -331,7 +399,7 @@
   </div>
 
   <h3>The progression rule</h3>
-  <p>Your <strong>comfort speed</strong> starts at your baseline test wpm. After each test: comprehension <span style="color:var(--good);font-weight:600">≥ 75% twice in a row → raise comfort speed 10%</span>. Comprehension <span style="color:var(--bad);font-weight:600">&lt; 60% → drop it 10%</span> and hold. Never chase the overspeed number — it's a training stimulus, not your reading speed.</p>
+  <p>Tempo tracks this for you. Your <strong>comfort speed</strong> starts at your baseline test wpm and updates itself after each test: comprehension <span style="color:var(--good);font-weight:600">≥ 75% twice in a row → +10%</span>, or <span style="color:var(--bad);font-weight:600">&lt; 60% → −10%</span> and hold. The card at the top of this tab always shows the current number and the three sprint speeds derived from it. Never chase the overspeed number — it's a training stimulus, not your reading speed.</p>
 
   <h3>Four-week outline</h3>
   <div class="card" style="overflow-x:auto">
@@ -495,6 +563,22 @@
 </footer>
 
 </div>
+
+<div id="session-bar" hidden>
+  <div class="sb-inner">
+    <div class="sb-step">
+      <span class="sb-count" id="sb-count"></span>
+      <span class="sb-name" id="sb-name"></span>
+      <span class="sb-detail" id="sb-detail"></span>
+    </div>
+    <div class="sb-actions">
+      <button class="btn ghost" id="sb-skip" type="button">Skip step</button>
+      <button class="btn ghost" id="sb-end" type="button">End</button>
+    </div>
+  </div>
+  <div class="sb-progress"><div id="sb-progress-bar"></div></div>
+</div>
+
 <div id="tooltip" role="status"></div>
 
 <script>
@@ -508,6 +592,7 @@ const PASSAGES = [
   {
     id: "octopus",
     title: "The Distributed Mind of the Octopus",
+    tier: "standard",
     text: `An octopus does not keep its mind in one place. Of its roughly five hundred million neurons, nearly two thirds sit not in the brain but in the arms themselves, arranged in clusters along each limb. The result is an animal whose arms can act with startling independence. A severed octopus arm, in laboratory studies, will still reach for food and attempt to pass it toward a mouth that is no longer there. Each arm tastes what it touches, since the suckers are packed with chemical receptors, so an octopus exploring a crevice is in a real sense tasting the rock with eight tongues at once. The central brain, wrapped in a ring around the esophagus, seems to issue broad commands, such as which direction to travel or whether to hunt, while leaving the fine choreography of several hundred suckers to local circuits. This division of labor may explain how octopuses manage feats that would overwhelm a centralized nervous system, like changing both the color and the texture of their skin in under a second to match a patch of seaweed. It also complicates the question of what the animal experiences. When an octopus solves a puzzle box, unscrewing a jar from the inside to reach a crab, it is not clear whether one mind solved it or a committee did. Researchers who study them describe a persistent, unsettling impression: the sense of being watched back with intent, by something built on a completely different plan from any vertebrate, whose last common ancestor with us was probably a flatworm six hundred million years ago.`,
     quiz: [
       { q: "Where do most of an octopus's neurons sit?", o: ["In the central brain", "In the arms", "Around the eyes", "In the skin"], a: 1 },
@@ -519,6 +604,7 @@ const PASSAGES = [
   {
     id: "pony",
     title: "Eighteen Months of the Pony Express",
+    tier: "easy",
     text: `The Pony Express is remembered as if it ran for generations, yet the whole enterprise lasted about eighteen months. Beginning in April 1860, relays of riders carried mail nearly two thousand miles between St. Joseph, Missouri, and Sacramento, California, in roughly ten days, a journey that took mail coaches three weeks or more. The system was a machine built from horses: around one hundred ninety stations spaced ten to fifteen miles apart, the distance a horse could gallop hard before tiring. A rider would swap horses at each station in under two minutes, transferring a locked leather mail cover called a mochila, and hand off to a fresh rider after seventy five to one hundred miles. Riders were paid well for the era, around one hundred dollars a month, but the advertised job requirements were blunt about the risks, and company lore claimed orphans were preferred. Speed was the entire product. When Lincoln's first inaugural address needed to reach California, riders relayed it in seven days and seventeen hours, a record. But the business never made money. The founders had gambled on winning a government mail contract that never came, and the service charged five dollars per half ounce at the start, an enormous sum, while losing money on every letter. The end arrived by wire, not by weather or war parties: two days after the transcontinental telegraph was completed in October 1861, the Pony Express announced its closure, instantly obsolete. Its fame was manufactured afterward, largely by Buffalo Bill's Wild West show, which turned a failed courier startup into an American legend.`,
     quiz: [
       { q: "Roughly how long did the Pony Express operate?", o: ["Eighteen months", "Five years", "A decade", "Three months"], a: 0 },
@@ -530,6 +616,7 @@ const PASSAGES = [
   {
     id: "container",
     title: "The Box That Shrank the World",
+    tier: "standard",
     text: `Before the shipping container, moving cargo across an ocean was mostly the art of stuffing odd-shaped things into a ship's hold by hand. Longshoremen wrestled barrels, bales, and crates one at a time, and a vessel could spend more time tied to the dock being loaded than actually sailing. In 1956, an American trucking entrepreneur named Malcom McLean tried something different: he loaded fifty eight truck trailers, detached from their wheels, onto a converted tanker called the Ideal X and sailed them from Newark to Houston. His insight was not the box itself but the system around it. If every container had identical corner fittings, then the same cranes, chassis, ships, and rail cars anywhere on earth could handle any of them without anyone touching the goods inside. Loading costs collapsed from around five dollars and eighty six cents per ton to under sixteen cents, and port time shrank from weeks to hours. The effects reached far beyond shipping. Once transport became nearly free, factories no longer needed to sit near ports or near their customers, and supply chains stretched across whole hemispheres; a single pair of sneakers could economically gather its rubber, fabric, and assembly from three continents. Old dockside neighborhoods emptied as work moved to vast automated terminals, and the longshoremen's trade shrank to a fraction of its former size. Standardization took a decade of committee fights over lengths and fittings, but the result, the twenty and forty foot boxes stacked on every modern ship, became arguably the most consequential transportation invention of the twentieth century, an economic engine hiding in plain sight.`,
     quiz: [
       { q: "What did Malcom McLean ship on the Ideal X in 1956?", o: ["Fifty-eight truck trailers without wheels", "A cargo of barrels and bales", "The first refrigerated cargo", "Rail cars full of coal"], a: 0 },
@@ -537,20 +624,168 @@ const PASSAGES = [
       { q: "What happened to loading costs per ton?", o: ["They roughly halved", "They fell from about $5.86 to under 16 cents", "They stayed flat but ports got faster", "They rose at first for a decade"], a: 1 },
       { q: "One downstream effect described in the passage:", o: ["Ships began sailing faster", "Ports moved inland", "Customs duties were abolished", "Factories no longer needed to sit near ports"], a: 3 }
     ]
+  },
+  {
+    id: "honeybee",
+    title: "How Bees Vote With Their Bodies",
+    tier: "easy",
+    text: `When a honeybee colony grows too large for its hive, roughly half the bees leave with the old queen to find a new home, and the way they choose that home is a kind of democracy. The swarm clusters on a branch while a few hundred scout bees fly off in every direction to inspect possible cavities. A scout that finds a promising hollow returns and performs a waggle dance, a looping figure-eight whose angle points toward the site and whose duration signals the distance. Crucially, the better the site, the longer and more vigorously the scout dances. Other scouts watch, fly out to check the advertised site for themselves, and if they agree, come back and dance for it too. No bee compares all the options; each judges only the one it visited. Yet good sites recruit dancers faster than mediocre ones, so support snowballs. The decision is made when the scouts at one site reach a quorum, about fifteen bees present at the same cavity, at which point they begin producing a high-pitched piping signal that tells the whole swarm to warm up its flight muscles. Only then does the cluster take off, often toward a site that most of the swarm has never seen. Biologists have found the process is remarkably accurate: given several choices, swarms usually pick the best available cavity. The colony arrives at a good group decision even though no individual bee holds the whole picture, an example of intelligence that lives in the interactions rather than in any single head.`,
+    quiz: [
+      { q: "What does a scout bee's waggle dance communicate?", o: ["The direction and distance to a site", "The number of bees in the swarm", "The age of the queen", "The temperature of the hive"], a: 0 },
+      { q: "How does the quality of a site affect the dance?", o: ["Better sites get shorter dances", "Better sites get longer, more vigorous dances", "Quality has no effect on the dance", "Only distance changes the dance"], a: 1 },
+      { q: "When is the decision effectively made?", o: ["When the queen chooses", "When all scouts agree", "When scouts at one site reach a quorum of about fifteen", "After exactly one day"], a: 2 },
+      { q: "The passage presents this as an example of…", o: ["A single leader bee deciding", "Random site selection", "Intelligence that lives in interactions, not one individual", "Bees copying human voting"], a: 3 }
+    ]
+  },
+  {
+    id: "greenland",
+    title: "The Map That Lies About Size",
+    tier: "standard",
+    text: `Look at most world maps and Greenland appears roughly the size of Africa, two vast landmasses of comparable heft. In reality Africa is about fourteen times larger. The distortion comes from the Mercator projection, drawn by the Flemish cartographer Gerardus Mercator in 1569 for a specific and reasonable purpose: navigation. Mercator's trick was to stretch the map so that any line of constant compass bearing appears straight, which let a sailor draw a course with a ruler and follow a single heading. The price of that convenience is that areas inflate as you move away from the equator, and they inflate without limit toward the poles. A country at high latitude like Greenland is blown up enormously, while equatorial regions stay close to true size. The effect is not politically neutral, even if Mercator intended none: wealthy nations tend to lie in the north and appear larger than they are, while much of Africa, South America, and South Asia sits near the equator and looks smaller than reality. Alternatives exist, such as the equal-area Gall-Peters projection, which preserves relative sizes at the cost of grotesquely stretched shapes. But no flat map can be faithful to both area and shape at once, because a sphere simply cannot be flattened without tearing or distorting something; this is a theorem of geometry, not a failure of skill. Every map is therefore an argument about what matters most, and the familiar classroom Mercator quietly argues that a navigator's convenience outweighs an honest sense of how big the world's regions really are.`,
+    quiz: [
+      { q: "For what purpose did Mercator design his projection in 1569?", o: ["Navigation by constant compass bearing", "Showing true country sizes", "Military planning", "Measuring populations"], a: 0 },
+      { q: "How much larger than Greenland is Africa in reality?", o: ["About twice", "About five times", "About fourteen times", "About the same"], a: 2 },
+      { q: "Why can no flat map preserve both area and shape?", o: ["Printers lack the ink", "A sphere can't be flattened without distorting something", "Cartographers never tried", "The equator is too long"], a: 1 },
+      { q: "The passage says every map is essentially…", o: ["Politically neutral", "A perfect copy of the globe", "Too complex to use", "An argument about what matters most"], a: 3 }
+    ]
+  },
+  {
+    id: "sleep",
+    title: "Why the Brain Cleans House at Night",
+    tier: "standard",
+    text: `For a long time sleep looked like a puzzle with no clear payoff: an animal that sleeps is unproductive and vulnerable, so evolution should have pruned it away unless it did something essential. Part of the answer emerged only in 2013, when researchers studying mice described what they called the glymphatic system, a network that flushes fluid through brain tissue to carry away waste. During waking hours the brain's cells are packed tightly, but during deep sleep they shrink, widening the spaces between them by as much as sixty percent and letting cerebrospinal fluid wash through far more freely. Among the substances cleared are metabolic byproducts that accumulate while neurons work, including a protein fragment called beta-amyloid, the same material that clumps into the plaques associated with Alzheimer's disease. In the mice, this cleaning ran roughly ten times faster during sleep than during wakefulness. The finding reframed sleep not as the brain switching off but as it switching into a different mode of work, one that cannot easily happen while the organ is busy processing the world. It also offered a mechanism behind an old observation, that chronic poor sleep tracks with cognitive decline. The research is still young and drawn largely from animals, so caution is warranted before declaring that a bad night poisons the brain. But it dissolved much of the mystery of why sleep is non-negotiable across the animal kingdom. The brain, it seems, must periodically stop taking in the world in order to take out its own trash.`,
+    quiz: [
+      { q: "What did researchers name the brain's waste-clearing network in 2013?", o: ["The lymphatic system", "The glymphatic system", "The limbic system", "The default network"], a: 1 },
+      { q: "What happens to brain cells during deep sleep?", o: ["They shrink, widening the spaces between them", "They swell and press together", "They stop using energy entirely", "They divide and multiply"], a: 0 },
+      { q: "Which protein fragment, linked to Alzheimer's, is cleared during sleep?", o: ["Insulin", "Collagen", "Beta-amyloid", "Hemoglobin"], a: 2 },
+      { q: "How does the passage reframe sleep?", o: ["As the brain fully shutting down", "As an evolutionary mistake", "As purely for the muscles", "As the brain switching into a different mode of work"], a: 3 }
+    ]
+  },
+  {
+    id: "sourdough",
+    title: "The Invisible Livestock in Sourdough",
+    tier: "easy",
+    text: `A jar of sourdough starter is not really an ingredient so much as a herd. Mix flour and water, leave it on the counter, and within days it becomes a living culture teeming with wild yeasts and bacteria that drifted in from the flour and the air. The two main players work in partnership. Wild yeasts eat the sugars in the flour and give off carbon dioxide, the gas that inflates the dough and makes the bread rise. Alongside them, lactic acid bacteria produce the acids that give sourdough its tang and, just as importantly, make the culture too acidic for most harmful microbes to survive. This is why a well-kept starter can live for decades, even centuries, without spoiling: it defends itself chemically. A baker feeds the starter with fresh flour and water on a schedule, effectively ranching the microbes, discarding part of the population and letting the rest bloom again. Different kitchens grow different cultures, because the particular strains that take hold depend on local conditions, which is why a starter carried from one city to another can slowly shift in flavor as it adapts. Long before anyone understood microbes, bakers were breeding and herding them by feel, passing starters down like heirlooms. What looks like a simple bubbling paste is in fact a tiny managed ecosystem, and the loaf that comes out of the oven is a record of the billions of organisms that lived, ate, and soured the dough before the heat finally killed them.`,
+    quiz: [
+      { q: "What gas do the wild yeasts produce that makes the dough rise?", o: ["Oxygen", "Carbon dioxide", "Hydrogen", "Nitrogen"], a: 1 },
+      { q: "How do lactic acid bacteria help protect the starter?", o: ["They make it too acidic for most harmful microbes", "They raise its temperature", "They seal it from air", "They eat the harmful microbes directly"], a: 0 },
+      { q: "Why can starters shift in flavor when moved to a new place?", o: ["The flour brand always changes", "The strains that take hold depend on local conditions", "Yeast dies during travel", "Water hardness sets the taste permanently"], a: 1 },
+      { q: "The passage compares keeping a starter to…", o: ["Painting", "Gardening flowers", "Ranching or herding microbes", "Brewing tea"], a: 2 }
+    ]
+  },
+  {
+    id: "roman-concrete",
+    title: "Why Roman Concrete Outlasts Ours",
+    tier: "dense",
+    text: `The Romans built harbor walls two thousand years ago that still stand in seawater, while modern reinforced concrete piers can crumble within decades, and the contrast long puzzled engineers. Modern concrete is designed to be inert: it is meant to set hard and then never change, and any chemical reaction with its environment is treated as decay. Roman marine concrete took the opposite approach without knowing it. Its builders mixed volcanic ash, called pozzolana, with lime and seawater, and the result was a material that kept reacting for centuries. When seawater percolated through tiny cracks, it dissolved components of the ash and triggered the growth of new interlocking minerals, notably a rare crystal called aluminous tobermorite, directly inside the cracks. In effect the concrete healed itself, growing stronger where it was attacked rather than weaker. Recent analysis has added a second mechanism: lumps of not-fully-mixed lime, long dismissed as sloppy craftsmanship, appear to act as reservoirs. When a crack reaches one, incoming water reacts with the lime lump to seal the gap with fresh calcium carbonate. Modern concrete lacks both features, and worse, it is usually reinforced with steel bars that rust, expand, and split the surrounding material from within, a weakness the unreinforced Roman mixture never had. The lesson researchers draw is not simply to copy an ancient recipe, which would be impractical at industrial scale, but to abandon the assumption that good concrete must be chemically dead. A material that anticipates cracking and repairs itself may prove more durable than one engineered, expensively, to never crack at all.`,
+    quiz: [
+      { q: "What volcanic material did the Romans mix into their marine concrete?", o: ["Basalt gravel", "Pozzolana ash", "Powdered marble", "Clay brick dust"], a: 1 },
+      { q: "What happened when seawater seeped into cracks in Roman concrete?", o: ["It triggered growth of new interlocking minerals", "It washed the concrete away faster", "It froze and split the walls", "Nothing measurable"], a: 0 },
+      { q: "How did lumps of unmixed lime turn out to help?", o: ["They added color", "They made the mix cheaper", "They act as reservoirs that seal new cracks", "They kept the concrete flexible"], a: 2 },
+      { q: "Why is modern reinforced concrete more vulnerable in the passage's account?", o: ["It is poured too thin", "Its steel bars rust, expand, and split it from within", "It is never left to cure", "It uses too much ash"], a: 1 }
+    ]
+  },
+  {
+    id: "longitude",
+    title: "The Clock That Found Longitude",
+    tier: "dense",
+    text: `For centuries sailors could find their latitude, their position north or south, by measuring the sun or stars, but longitude, their position east or west, defeated them, and the failure was lethal. A ship that misjudged its longitude could run aground believing it was miles from land, and thousands of lives were lost that way. The principle of a solution was understood: because the earth turns fifteen degrees of longitude every hour, a navigator who knew the exact time at a fixed reference point, and compared it to local noon found from the sun, could convert the difference in hours into a distance east or west. The obstacle was practical. No clock of the era could keep accurate time aboard a rolling, damp, temperature-swinging ship; pendulum clocks were useless at sea. Britain, after a catastrophic naval disaster, offered a vast prize in 1714 for a working method. Most scientists expected the answer to come from astronomy, from painstaking tables of the moon's motion. Instead it came from a self-taught Yorkshire carpenter named John Harrison, who spent decades building a series of marine timekeepers of astonishing ingenuity, using materials that counteracted their own expansion with heat and mechanisms that needed no lubrication. His final watch-sized instrument lost only a few seconds on a long Atlantic voyage. Harrison struggled for years to be paid, opposed by an establishment that favored the astronomical approach, and received his due only late in life with the king's intervention. His clocks reframed navigation from a problem of the heavens into a problem of engineering, and made it possible, for the first time, to know exactly where on the width of the ocean a ship actually was.`,
+    quiz: [
+      { q: "Why is knowing the time at a fixed reference point enough to find longitude?", o: ["The earth turns fifteen degrees of longitude per hour", "The stars move once a year", "Tides follow the clock", "The sun changes color hourly"], a: 0 },
+      { q: "Why did ordinary clocks fail at sea?", o: ["They were too expensive", "Motion, damp, and temperature swings ruined their accuracy", "Sailors couldn't read them", "They needed sunlight"], a: 1 },
+      { q: "Who ultimately solved the problem?", o: ["A royal astronomer", "A navy admiral", "A self-taught carpenter, John Harrison", "A committee of scientists"], a: 2 },
+      { q: "Most experts had expected the solution to come from…", o: ["A new kind of sail", "Astronomy and tables of the moon", "Deeper harbors", "Faster ships"], a: 1 }
+    ]
+  },
+  {
+    id: "tardigrade",
+    title: "The Animal That Can Stop Being Alive",
+    tier: "standard",
+    text: `The tardigrade, a microscopic eight-legged creature also called a water bear, has a talent that borders on the impossible: it can essentially switch off being alive and switch back on later. When its watery habitat dries out, a tardigrade pulls in its legs, expels most of the water from its body, and curls into a shriveled husk called a tun. In this state its metabolism drops to less than a hundredth of a percent of normal, so low that by most definitions it is not living at all, merely not dead. As a tun it can survive conditions that would destroy nearly anything: temperatures near absolute cold, heat above the boiling point of water, pressures far beyond the deep ocean, doses of radiation that would kill a human many times over, and even the vacuum of open space, which several tardigrades endured on the outside of a spacecraft in 2007. The trick appears to rely partly on special proteins that, as the animal dries, turn its cell interiors into a glass-like solid, cushioning the delicate molecular machinery so it does not shatter or unravel. When water returns, the glass dissolves, the machinery resumes, and the tardigrade walks away, sometimes after years of suspension. This ability, called cryptobiosis, does not make tardigrades tough in the ordinary sense; a fish can crush one easily. Their power is narrower and stranger: not to withstand extremes while living through them, but to leave the state of being alive entirely, wait out the catastrophe as something closer to a seed than an animal, and return.`,
+    quiz: [
+      { q: "What is the shriveled, dried-out state of a tardigrade called?", o: ["A tun", "A cyst", "A pupa", "A spore"], a: 0 },
+      { q: "Roughly how far does its metabolism drop in that state?", o: ["To about half", "To about ten percent", "To less than a hundredth of a percent", "It stays the same"], a: 2 },
+      { q: "How do special proteins protect the drying tardigrade?", o: ["They generate heat", "They turn cell interiors into a glass-like solid", "They pump in extra water", "They form a hard shell"], a: 1 },
+      { q: "The passage says the tardigrade's real power is…", o: ["Enormous physical strength", "Fast swimming", "Leaving the state of being alive and returning", "Attacking predators"], a: 2 }
+    ]
+  },
+  {
+    id: "dvorak",
+    title: "The Keyboard That Was Never Meant to Be Fast",
+    tier: "easy",
+    text: `The layout of letters on nearly every keyboard, known as QWERTY after its top row, is often said to have been designed to slow typists down, and the truth is close to that but more specific. In the 1870s, early typewriters used metal bars, one per letter, that swung up to strike the paper. If two neighboring bars were struck in quick succession, they tended to jam. Christopher Sholes, refining his machine, rearranged the keys so that letters frequently typed together sat far apart on the mechanism, reducing the chance of a jam. The goal was not to slow the typist as such, but to keep the machine from tangling itself, which amounted to smoothing the flow of fast typing rather than obstructing it. QWERTY then became locked in for a reason that had nothing to do with efficiency. Typists learned it, manufacturers built it, schools taught it, and any rival layout faced the impossible task of convincing millions to relearn a skill for a modest gain. In the 1930s a professor named August Dvorak designed an alternative arrangement meant to put the most common letters under the strongest fingers, and studies have suggested it can be somewhat more comfortable, though claims of dramatically faster speeds are disputed. Yet Dvorak never displaced QWERTY, and almost certainly never will, not because it is worse but because the cost of switching an entire civilization's muscle memory dwarfs the benefit. QWERTY endures as a monument to a jam that stopped mattering a century ago.`,
+    quiz: [
+      { q: "Why did Sholes space frequently-paired letters far apart?", o: ["To make the keyboard look balanced", "To keep neighboring type bars from jamming", "To fit more keys", "To save metal"], a: 1 },
+      { q: "The passage says QWERTY's real goal was to…", o: ["Slow typists down on purpose", "Keep the machine from tangling during fast typing", "Teach children the alphabet", "Match Morse code"], a: 1 },
+      { q: "What did August Dvorak's layout try to do?", o: ["Put common letters under the strongest fingers", "Copy QWERTY exactly", "Remove rarely-used keys", "Add more rows"], a: 0 },
+      { q: "Why has Dvorak never displaced QWERTY, according to the passage?", o: ["It is clearly worse", "It jams more often", "The cost of relearning dwarfs the benefit", "It was patented and blocked"], a: 2 }
+    ]
+  },
+  {
+    id: "venice",
+    title: "The City Built on a Forest of Trees",
+    tier: "dense",
+    text: `Venice appears to float on water, its stone palaces rising directly from the lagoon, but beneath that stone lies one of history's stranger feats of engineering: a city standing on a submerged forest. The islands of the lagoon are soft mud, far too weak to bear heavy masonry, so from the earliest centuries builders drove countless wooden piles down through the mud to a firmer layer of compacted clay below. Some large buildings rest on many thousands of such piles, packed close together, with wooden platforms laid across their tops and stone foundations built upon that. The counterintuitive part is that the wood has not rotted away in more than a thousand years. Rot is caused by fungi and microbes that require oxygen, and the piles, buried in dense waterlogged mud, sit in an environment almost entirely sealed from air. Deprived of oxygen, the usual agents of decay cannot work. Over centuries, mineral-rich water permeating the timber has partly petrified it, so that some piles have taken on an almost stone-like hardness. The trees themselves, mostly alder and oak, were floated in from the forests of the mainland and the Adriatic coast, and the scale of the harvest reshaped whole landscapes to supply a city that consumed forests to stand on them. So the familiar image is precisely inverted. Venice is not a city that defeated the water; it is a city that used the water as a preservative, its foundations surviving exactly because they were buried where nothing could breathe.`,
+    quiz: [
+      { q: "What did Venetian builders drive through the mud to support buildings?", o: ["Iron rods", "Wooden piles", "Concrete columns", "Stone blocks"], a: 1 },
+      { q: "Why hasn't the buried wood rotted?", o: ["It was chemically treated", "The mud seals it from the oxygen that decay needs", "It is a rot-proof species", "It is regularly replaced"], a: 1 },
+      { q: "What has mineral-rich water done to the timber over centuries?", o: ["Partly petrified it toward stone-like hardness", "Dissolved it slowly", "Turned it to charcoal", "Made it float upward"], a: 0 },
+      { q: "The passage says the familiar image of Venice is…", o: ["Basically accurate", "Precisely inverted — water preserves it rather than threatens it", "An exaggeration of its size", "About its bridges, not its foundations"], a: 1 }
+    ]
   }
 ];
 
 /* ==================== state & helpers ==================== */
 
 const LOG_KEY = "tempo-log-v1";
+const COMFORT_KEY = "tempo-comfort-v1";
+const WPM_MIN = 150, WPM_MAX = 800;
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const tokenize = t => t.trim().split(/\s+/).filter(Boolean);
 const fmtDate = iso => new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+const clampWpm = w => Math.max(WPM_MIN, Math.min(WPM_MAX, Math.round(w)));
 
 function loadLog() { try { return JSON.parse(localStorage.getItem(LOG_KEY)) || []; } catch { return []; } }
 function saveLog(l) { localStorage.setItem(LOG_KEY, JSON.stringify(l)); }
 function addEntry(e) { const l = loadLog(); l.push(e); saveLog(l); }
+
+/* ---- comfort speed: the tracked number the whole protocol keys off ---- */
+function loadComfort() { try { return JSON.parse(localStorage.getItem(COMFORT_KEY)) || null; } catch { return null; } }
+function saveComfort(c) { localStorage.setItem(COMFORT_KEY, JSON.stringify(c)); }
+
+/* Current comfort wpm, or null until the first test seeds it. */
+function comfortWpm() { const c = loadComfort(); return c ? c.wpm : null; }
+
+/* The three RSVP round targets derived from comfort. */
+function roundSpeeds(base) {
+  const b = base || 300;
+  return {
+    warm:  clampWpm(b * 1.10),  // settle round — should feel easy
+    sprint: clampWpm(b * 1.25), // working round
+    over:  clampWpm(b * 1.50)   // overspeed stimulus
+  };
+}
+
+/* Apply the progression rule to any test entries not yet processed.
+   Rule: seed comfort from the first test; then, walking new tests in order,
+   two consecutive tests >=75% -> +10%, any test <60% -> -10%.
+   Returns { wpm, change } where change is 'up' | 'down' | null for the latest test. */
+function applyProgression() {
+  const tests = loadLog().filter(e => e.mode === "test" && e.comp != null);
+  let c = loadComfort() || { wpm: null, processed: 0 };
+  let change = null;
+  if (!tests.length) return { wpm: c.wpm, change };
+  if (c.wpm == null) { c.wpm = tests[0].wpm; c.processed = 1; }
+  for (let i = c.processed; i < tests.length; i++) {
+    change = null;
+    if (tests[i].comp < 60) { c.wpm = clampWpm(c.wpm * 0.9); change = "down"; }
+    else if (tests[i].comp >= 75 && i > 0 && tests[i - 1].comp >= 75) { c.wpm = clampWpm(c.wpm * 1.1); change = "up"; }
+    c.processed = i + 1;
+  }
+  saveComfort(c);
+  return { wpm: c.wpm, change };
+}
 
 /* word display duration multiplier: long words & punctuation earn extra time */
 function wordWeight(w) {
@@ -576,6 +811,8 @@ $$(".tab").forEach(btn => btn.addEventListener("click", () => {
   rsvp.pause(); pacer.pause();
   if (btn.dataset.view === "progress") renderProgress();
 }));
+
+function switchTab(view) { const t = $$(".tab").find(b => b.dataset.view === view); if (t) t.click(); }
 
 const themeBtn = $("#theme-btn");
 function effectiveTheme() {
@@ -773,7 +1010,9 @@ const rsvp = {
       addEntry({ t: new Date().toISOString(), mode: "rsvp", wpm: effWpm, comp: null, passage: this.source.label });
       e.target.textContent = "Logged ✓"; e.target.disabled = true;
     });
-  }
+    if (this.onFinish) { const cb = this.onFinish; this.onFinish = null; cb(effWpm); }
+  },
+  onFinish: null
 };
 
 fillSourceSelect($("#rsvp-source"));
@@ -891,7 +1130,9 @@ const pacer = {
       addEntry({ t: new Date().toISOString(), mode: "pacer", wpm: effWpm, comp: null, passage: this.source.label });
       e.target.textContent = "Logged ✓"; e.target.disabled = true;
     });
-  }
+    if (this.onFinish) { const cb = this.onFinish; this.onFinish = null; cb(effWpm); }
+  },
+  onFinish: null
 };
 
 fillSourceSelect($("#pacer-source"));
@@ -932,6 +1173,38 @@ document.addEventListener("keydown", (e) => {
 
 const test = { t0: 0, passage: null };
 
+/* ---- comfort panel on the Plan tab ---- */
+function renderComfort(justChanged) {
+  const el = $("#comfort-panel");
+  const c = comfortWpm();
+  if (c == null) {
+    el.innerHTML = `<div class="comfort-card">
+      <div class="cap">Your comfort speed</div>
+      <p class="say" style="margin-top:6px">Not set yet. Take one <a href="#" data-goto="test">speed test</a> — your first measured speed becomes the number every drill is tuned to.</p>
+    </div>`;
+    el.querySelector("[data-goto]").addEventListener("click", (e) => {
+      e.preventDefault(); $$('.tab').find(t => t.dataset.view === "test").click();
+    });
+    return;
+  }
+  const r = roundSpeeds(c);
+  let say = `Sprint sliders start here automatically. Clear the 75% gate on two tests in a row and this rises 10%; drop below 60% and it eases back.`;
+  if (justChanged === "up") say = `<span class="delta up">▲ Raised 10%</span> — two tests in a row cleared the 75% gate. Nice.`;
+  else if (justChanged === "down") say = `<span class="delta down">▼ Eased back 10%</span> — comprehension dipped under 60%. Hold here and rebuild.`;
+  el.innerHTML = `<div class="comfort-card">
+    <div class="top">
+      <span class="big">${c}<small> wpm</small></span>
+      <span class="cap">Your comfort speed</span>
+    </div>
+    <div class="speed-pills">
+      <div class="speed-pill"><span class="pn">Warm-up +10%</span><span class="pv">${r.warm}<small> wpm</small></span></div>
+      <div class="speed-pill"><span class="pn">Sprint +25%</span><span class="pv">${r.sprint}<small> wpm</small></span></div>
+      <div class="speed-pill"><span class="pn">Overspeed +50%</span><span class="pv">${r.over}<small> wpm</small></span></div>
+    </div>
+    <p class="say">${say}</p>
+  </div>`;
+}
+
 function fillTestSelect() {
   const sel = $("#test-passage");
   const tested = new Set(loadLog().filter(e => e.mode === "test").map(e => e.passage));
@@ -958,17 +1231,43 @@ $("#test-start").addEventListener("click", () => {
   test.t0 = performance.now();
 });
 
+const MAX_TEST_WPM = 1200; // above this, the passage was not actually read
+
 $("#test-done").addEventListener("click", () => {
   const mins = (performance.now() - test.t0) / 60000;
   const wpm = Math.round(tokenize(test.passage.text).length / mins);
+  if (wpm > MAX_TEST_WPM) {
+    const r = $("#test-result");
+    $("#test-reading").hidden = true;
+    r.hidden = false;
+    r.innerHTML = `<div class="note" style="border-left-color:var(--bad);background:color-mix(in srgb, var(--bad) 8%, transparent)">
+      <strong>That was too fast to count — ${wpm} wpm.</strong> The timer says under a second, so the passage wasn't really read.
+      Nothing was logged and your comfort speed is untouched. Read it properly this time.
+      <div class="btnrow" style="margin-bottom:0"><button class="btn" id="test-reread" type="button">Read it again</button></div>
+    </div>`;
+    $("#test-reread").addEventListener("click", () => {
+      r.hidden = true; r.innerHTML = "";
+      $("#test-reading").hidden = false;
+      test.t0 = performance.now();
+      $("#test-text").scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+    });
+    return;
+  }
   $("#test-reading").hidden = true;
   runQuiz(test.passage, $("#test-quiz"), (pct) => {
+    const firstEver = comfortWpm() == null;
     addEntry({ t: new Date().toISOString(), mode: "test", wpm, comp: pct, passage: test.passage.title });
+    const prog = applyProgression();
+    renderComfort(prog.change);
+    renderLauncher();
+    const inSession = session.active;
     const pass = pct >= 75;
     let advice;
-    if (pass) advice = "Gate passed. If your last two tests both cleared 75%, raise your drill comfort speed by 10%.";
-    else if (pct >= 60) advice = "Close — hold your current comfort speed and retest in a day or two.";
-    else advice = "Below 60% — drop your drill speeds by 10% and rebuild from there.";
+    if (firstEver) advice = `Baseline set: your comfort speed is now <strong>${prog.wpm} wpm</strong>. Every drill will tune itself to this. Clear the 75% gate twice in a row to raise it.`;
+    else if (prog.change === "up") advice = `Two tests in a row over the gate — comfort speed raised to <strong>${prog.wpm} wpm</strong>. The sprint sliders just moved up with it.`;
+    else if (prog.change === "down") advice = `Comprehension slipped under 60%, so comfort speed eased back to <strong>${prog.wpm} wpm</strong>. Hold here until it's solid.`;
+    else if (pass) advice = `Gate passed. Comfort speed holds at <strong>${prog.wpm} wpm</strong> — one more test over 75% and it rises 10%.`;
+    else advice = `Close. Comfort speed holds at <strong>${prog.wpm} wpm</strong>; retest in a day or two.`;
     const r = $("#test-result");
     r.hidden = false;
     r.innerHTML = `
@@ -976,6 +1275,8 @@ $("#test-done").addEventListener("click", () => {
         <div class="stat"><span class="label">Measured speed</span><div class="num">${wpm}<small> wpm</small></div></div>
         <div class="stat"><span class="label">Comprehension</span><div class="num">${pct}<small> %</small></div>
           <span class="verdict ${pass ? "pass" : "fail"}">${pass ? "≥ 75% — counts" : "below the 75% gate"}</span></div>
+        <div class="stat"><span class="label">Comfort speed</span><div class="num">${prog.wpm}<small> wpm</small></div>
+          ${prog.change ? `<span class="verdict ${prog.change === "up" ? "pass" : "fail"}">${prog.change === "up" ? "▲ +10%" : "▼ −10%"}</span>` : ""}</div>
       </div>
       <div class="note">${advice}</div>
       <div class="btnrow"><button class="btn ghost" id="test-again" type="button">Test another passage</button></div>`;
@@ -985,6 +1286,11 @@ $("#test-done").addEventListener("click", () => {
       r.hidden = true; r.innerHTML = "";
       $("#test-quiz").hidden = true; $("#test-quiz").innerHTML = "";
     });
+    if (inSession) {
+      session.active = false;
+      session.bar.hidden = true;
+      document.body.classList.remove("session-open");
+    }
     r.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "nearest" });
   });
 });
@@ -1158,12 +1464,146 @@ function drawTable(log) {
 }
 
 $("#prog-clear").addEventListener("click", () => {
-  if (confirm("Delete all logged sessions? This can't be undone.")) {
+  if (confirm("Delete all logged sessions and reset your comfort speed? This can't be undone.")) {
     localStorage.removeItem(LOG_KEY);
+    localStorage.removeItem(COMFORT_KEY);
     renderProgress();
     fillTestSelect();
+    renderComfort();
+    renderLauncher();
   }
 });
+
+/* ==================== guided session ==================== */
+
+/* Alternate-day rule: a test is due unless one was already taken today. */
+function testDueToday() {
+  const tests = loadLog().filter(e => e.mode === "test");
+  if (!tests.length) return true;
+  const last = new Date(tests[tests.length - 1].t);
+  return last.toDateString() !== new Date().toDateString();
+}
+
+function setDrill(prefix, s) {
+  $(prefix + "-source").value = "sample";
+  $(prefix + "-custom-wrap").hidden = true;
+  $(prefix + "-wpm").value = s.wpm; $(prefix + "-wpm-val").textContent = s.wpm;
+  $(prefix + "-chunk").value = s.chunk; $(prefix + "-chunk-val").textContent = s.chunk;
+}
+
+const session = {
+  steps: [], i: 0, active: false, bar: $("#session-bar"),
+
+  build() {
+    const c = comfortWpm() || 300;
+    const r = roundSpeeds(c);
+    const steps = [
+      { kind: "pacer", name: "Warm-up · Pacer", wpm: r.warm, chunk: 2, note: "follow the highlight, don't jump back" },
+      { kind: "rsvp", name: "Sprint 1", wpm: r.sprint, chunk: 1, note: "comfortable working pace" },
+      { kind: "rsvp", name: "Sprint 2 · Overspeed", wpm: r.over, chunk: 1, note: "too fast on purpose — let it blur" },
+      { kind: "rsvp", name: "Sprint 3 · Settle", wpm: r.warm, chunk: 1, note: "should feel slow now" }
+    ];
+    if (testDueToday()) steps.push({ kind: "test", name: "Speed test", note: "read naturally, then answer" });
+    this.steps = steps;
+  },
+
+  start() {
+    this.build();
+    this.i = 0; this.active = true;
+    document.body.classList.add("session-open");
+    this.bar.hidden = false;
+    this.runStep();
+  },
+
+  runStep() {
+    const s = this.steps[this.i];
+    this.renderBar();
+    if (s.kind === "pacer") {
+      switchTab("pacer"); setDrill("#pacer", s);
+      pacer.onFinish = () => this.next();
+      pacer.build(); pacer.play();
+    } else if (s.kind === "rsvp") {
+      switchTab("rsvp"); setDrill("#rsvp", s);
+      rsvp.onFinish = () => this.next();
+      rsvp.build(); rsvp.play();
+    } else if (s.kind === "test") {
+      switchTab("test"); // terminal step — ends when the test's quiz completes
+    }
+  },
+
+  next() {
+    if (!this.active) return;
+    this.i++;
+    if (this.i >= this.steps.length) this.end(true);
+    else this.runStep();
+  },
+
+  skip() { rsvp.onFinish = null; pacer.onFinish = null; rsvp.pause(); pacer.pause(); this.next(); },
+
+  end(completed) {
+    this.active = false;
+    rsvp.onFinish = null; pacer.onFinish = null;
+    rsvp.pause(); pacer.pause();
+    this.bar.hidden = true;
+    document.body.classList.remove("session-open");
+    switchTab("plan");
+    renderLauncher(completed ? "Session complete — nice work." : null);
+  },
+
+  renderBar() {
+    const s = this.steps[this.i];
+    $("#sb-count").textContent = `Step ${this.i + 1} / ${this.steps.length}`;
+    $("#sb-name").textContent = s.name;
+    $("#sb-detail").textContent = s.wpm ? `${s.wpm} wpm · chunk ${s.chunk} — ${s.note}` : s.note;
+    $("#sb-progress-bar").style.width = (100 * this.i / this.steps.length) + "%";
+  }
+};
+
+$("#sb-skip").addEventListener("click", () => session.skip());
+$("#sb-end").addEventListener("click", () => session.end(false));
+
+function renderLauncher(flash) {
+  const el = $("#session-launcher");
+  const c = comfortWpm();
+  if (c == null) {
+    el.innerHTML = `<div class="launcher"><div class="lx-main">
+      <h3>Start with a baseline</h3>
+      <p>Take one speed test to set your comfort speed — then the guided daily session unlocks here.</p>
+    </div><button class="btn" id="lx-test" type="button">Go to speed test</button></div>`;
+    $("#lx-test").addEventListener("click", () => switchTab("test"));
+    return;
+  }
+  const r = roundSpeeds(c);
+  const due = testDueToday();
+  const chips = [
+    `<span class="plan-chip">Warm-up ${r.warm}</span>`,
+    `<span class="plan-chip">Sprint ${r.sprint}</span>`,
+    `<span class="plan-chip">Over ${r.over}</span>`,
+    `<span class="plan-chip">Settle ${r.warm}</span>`,
+    due ? `<span class="plan-chip test">+ Speed test</span>` : ""
+  ].join("");
+  el.innerHTML = `<div class="launcher"><div class="lx-main">
+    <h3>Today's session${flash ? ` — <span style="color:var(--good)">${flash}</span>` : ""}</h3>
+    <p>A guided walk-through tuned to your ${c} wpm comfort speed${due ? ", ending in a speed test" : " — drills only, no test due today"}.</p>
+    <div class="plan-chips">${chips}</div>
+  </div><button class="btn" id="lx-start" type="button">Start today's session</button></div>`;
+  $("#lx-start").addEventListener("click", () => session.start());
+}
+
+/* ==================== startup ==================== */
+renderComfort();
+renderLauncher();
+(function seedSpritzFromComfort() {
+  const c = comfortWpm();
+  if (c == null) return;
+  const target = roundSpeeds(c).sprint;
+  ["#rsvp-wpm", "#pacer-wpm"].forEach(sel => {
+    const slider = $(sel);
+    slider.value = target;
+    $(sel + "-val").textContent = target;
+  });
+  rsvp.updateMeta();
+})();
 </script>
 </body>
 </html>
