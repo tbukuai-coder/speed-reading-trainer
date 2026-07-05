@@ -21,9 +21,32 @@ Ordered by training value, not feature count. The guiding principle: the app sho
 - [ ] PWA manifest + service worker: installable to the home screen, works offline. Cheap given it's already static HTML, and daily-habit apps live on the phone.
 - [ ] Touch controls for RSVP (tap = pause, swipe = speed).
 
+## v1.4 — Honest metrics
+
+The app's whole pitch is that speed only counts with comprehension. These make that tradeoff *visible* rather than just enforced.
+
+- [ ] **Effective Reading Rate (ERR = wpm × comprehension%).** A single number that refuses to reward speed you can't recall — 450 wpm @ 50% (225) is worse than 300 @ 90% (270). Better headline stat than raw "best wpm."
+- [ ] **Speed–comprehension frontier chart.** Scatter every session (wpm × comprehension) and trace your personal efficient frontier along the top edge, so the wall where speed starts costing recall is something you can see.
+- [ ] **Next-day retention check.** A short delayed re-quiz on something read the day before — immediate comprehension and real retention are different things, and the gap is worth measuring.
+- [ ] **Confidence calibration.** After each answer, "how sure were you?" — surfaces whether fast reading is breeding overconfidence.
+
+## v1.5 — New drills
+
+- [ ] **Subvocalization suppression drill.** Read while a metronome tap / distractor count occupies the inner voice — the technique the app describes but doesn't yet train.
+- [ ] **Schulte tables.** Shuffled-number grid tapped in order — a classic peripheral-span / fixation-width exercise, a different muscle from RSVP.
+- [ ] **Progressive column narrowing.** Squeeze the pacer's column over time so each line needs fewer fixations, training a wider span on real prose.
+
+## v1.6 — Reach and habit
+
+- [ ] **Streak calendar heatmap** (GitHub-style), extending the streak counter.
+- [ ] **Dyslexia-friendly reading option** — bundled OpenDyslexic face (data-URI, stays zero-dependency) + adjustable letter/line spacing.
+- [ ] **Configurable session length & daily reminder** (reminder ties into the v1.3 PWA push work).
+
 ## v2 — Quiz any text
 
 - [ ] Optional "bring your own Claude API key" mode that generates four comprehension questions from any pasted text, so custom reading counts toward verified progress. Kept optional so the default build stays zero-dependency and key-free.
+- [ ] **Auto-estimate tier for pasted text** (Flesch reading ease, computed locally) so custom material slots into easy / standard / dense automatically.
+- [ ] **"Read your own book" mode** — paste a chapter, pace through it across sessions, track your position; turns drills into actual reading.
 
 ## Explicitly not planned
 
