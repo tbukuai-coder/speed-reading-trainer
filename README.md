@@ -70,3 +70,22 @@ The training logic: **drill on easy, test on standard, stretch on dense.** Re-re
 ## Development
 
 No build step. Verified end-to-end with Playwright — `scratchpad/drive.py` in the working session drives the baseline test, comfort-speed seeding, guided-session orchestration, and both themes. To re-verify after edits, run that script against the local `index.html`.
+
+## References & further reading
+
+Read the practical books for the *drills* and the science books for the *reality check* — the popular technique guides tend to promise 1,000+ WPM with full comprehension, which the research below does not support. Tempo deliberately teaches the techniques while keeping the claims honest.
+
+**Practical technique**
+
+- Peter Kump — *Breakthrough Rapid Reading* (rev. ed., 1998). One of the more grounded practical courses: hand-pacing, cutting regressions, widening fixations.
+- Abby Marks-Beale & The Princeton Language Institute — *10 Days to Faster Reading* (2001). Approachable drills; realistic about skimming vs. reading.
+- Stanley D. Frank — *The Evelyn Wood Seven-Day Speed Reading and Learning Program* (1990). The classic "Reading Dynamics" method, source of much modern speed-reading lore.
+- Tony Buzan — *The Speed Reading Book* (rev. ed., 2006). Widely read; some throughput claims are disputed, so treat the numbers with the skepticism the science section invites.
+- Mortimer J. Adler & Charles Van Doren — *How to Read a Book* (rev. ed., 1972). Not about speed, but the definitive guide to reading *levels* — inspectional reading (skimming with intent) is the skill most "speed readers" are actually using.
+
+**The science (evidence-based)**
+
+- Keith Rayner, Elizabeth R. Schotter, Michael E. J. Masson, Mary C. Potter & Rebecca Treiman (2016). "So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help?" *Psychological Science in the Public Interest*, 17(1), 4–34. **The definitive review** — the app's core premise comes from here.
+- Marc Brysbaert (2019). "How Many Words Do We Read Per Minute? A Review and Meta-analysis of Reading Rate." *Journal of Memory and Language*, 109. Source of the ~238 WPM non-fiction baseline used in the benchmark table.
+- Stanislas Dehaene — *Reading in the Brain: The New Science of How We Read* (2009). Why the eyes and language system, not willpower, set the ceiling.
+- Maryanne Wolf — *Proust and the Squid* (2007) and *Reader, Come Home* (2018). How the reading brain is built, and what fast/shallow reading trades away.
