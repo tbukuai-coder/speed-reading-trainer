@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tempo — Speed Reading Trainer</title>
+<style>
+  :root {
+    --bg: #F7F8F5;
+    --surface: #FFFFFF;
+    --ink: #161D1A;
+    --ink-2: #47524D;
+    --ink-3: #6E7A74;
+    --line: #DDE3DF;
+    --accent: #0B7A6B;
+    --accent-soft: #E3F0ED;
+    --on-accent: #FFFFFF;
+    --pivot: #B42318;
+    --chart-1: #0B8A74;
+    --chart-2: #6D5FC7;
+    --good: #0B7A3A;
+    --bad: #B42318;
+    --serif: "Charter", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121815;
+      --surface: #1A211D;
+      --ink: #E7EAE6;
+      --ink-2: #A8B3AC;
+      --ink-3: #7E8A83;
+      --line: #2A332E;
+      --accent: #35C4AE;
+      --accent-soft: #1E2E2A;
+      --on-accent: #0C1512;
+      --pivot: #F0705F;
+      --chart-1: #1AA88E;
+      --chart-2: #8A7BE0;
+      --good: #4CC97B;
+      --bad: #F0705F;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F7F8F5; --surface: #FFFFFF; --ink: #161D1A; --ink-2: #47524D;
+    --ink-3: #6E7A74; --line: #DDE3DF; --accent: #0B7A6B; --accent-soft: #E3F0ED;
+    --on-accent: #FFFFFF; --pivot: #B42318; --chart-1: #0B8A74; --chart-2: #6D5FC7;
+    --good: #0B7A3A; --bad: #B42318;
+  }
+  :root[data-theme="dark"] {
+    --bg: #121815; --surface: #1A211D; --ink: #E7EAE6; --ink-2: #A8B3AC;
+    --ink-3: #7E8A83; --line: #2A332E; --accent: #35C4AE; --accent-soft: #1E2E2A;
+    --on-accent: #0C1512; --pivot: #F0705F; --chart-1: #1AA88E; --chart-2: #8A7BE0;
+    --good: #4CC97B; --bad: #F0705F;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.55;
+  }
+  button { font: inherit; cursor: pointer; }
+  input, select, textarea { font: inherit; color: inherit; }
+
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 20px 64px; }
+
+  /* ---------- header ---------- */
+  header.site {
+    display: flex; align-items: baseline; gap: 14px;
+    padding: 28px 0 6px; flex-wrap: wrap;
+  }
+  .wordmark {
+    font-family: var(--serif); font-size: 1.9rem; font-weight: 700;
+    letter-spacing: -0.01em; margin: 0;
+  }
+  .wordmark .pivot-letter { color: var(--pivot); }
+  .tagline { color: var(--ink-3); font-size: 0.9rem; }
+  #theme-btn {
+    margin-left: auto; background: none; border: 1px solid var(--line);
+    border-radius: 6px; color: var(--ink-2); padding: 4px 10px; font-size: 0.8rem;
+  }
+  #theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- tabs ---------- */
+  nav.tabs {
+    display: flex; gap: 2px; border-bottom: 2px solid var(--line);
+    margin: 14px 0 30px; overflow-x: auto;
+  }
+  .tab {
+    background: none; border: none; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; padding: 9px 14px; color: var(--ink-2);
+    font-size: 0.92rem; white-space: nowrap;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+  .tab:focus-visible, button:focus-visible, select:focus-visible,
+  textarea:focus-visible, input:focus-visible, a:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  main section.view { display: none; }
+  main section.view.active { display: block; }
+
+  h2 { font-family: var(--serif); font-size: 1.5rem; margin: 0 0 4px; text-wrap: balance; }
+  h3 { font-size: 1.02rem; margin: 26px 0 8px; }
+  .lede { color: var(--ink-2); margin: 0 0 22px; max-width: 62ch; }
+  p { max-width: 65ch; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 18px 20px; margin: 14px 0;
+  }
+  .note {
+    border-left: 3px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 14px 0;
+    font-size: 0.92rem; color: var(--ink-2); max-width: 62ch;
+  }
+  .note strong { color: var(--ink); }
+
+  .label {
+    display: block; font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-3); margin-bottom: 4px;
+  }
+
+  /* ---------- controls ---------- */
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 16px 22px; align-items: flex-end;
+    margin: 14px 0;
+  }
+  .ctl { display: flex; flex-direction: column; gap: 2px; }
+  .ctl select {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+    padding: 6px 8px; min-width: 150px;
+  }
+  .ctl input[type=range] { width: 170px; accent-color: var(--accent); }
+  .ctl .val { font-variant-numeric: tabular-nums; font-size: 0.85rem; color: var(--ink-2); }
+  textarea {
+    width: 100%; min-height: 110px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+    font-family: var(--serif); resize: vertical;
+  }
+  .btn {
+    background: var(--accent); color: var(--on-accent); border: none;
+    border-radius: 7px; padding: 9px 18px; font-weight: 600; font-size: 0.95rem;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn.ghost {
+    background: none; border: 1px solid var(--line); color: var(--ink-2); font-weight: 500;
+  }
+  .btn.ghost:hover { border-color: var(--accent); color: var(--accent); filter: none; }
+  .btn:disabled { opacity: 0.45; cursor: default; }
+  .btnrow { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+  .hint { font-size: 0.82rem; color: var(--ink-3); }
+  kbd {
+    border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px;
+    padding: 0 5px; font-size: 0.8em; font-family: var(--sans); color: var(--ink-2);
+  }
+
+  /* ---------- RSVP stage ---------- */
+  .stage {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 34px 20px 22px; margin: 16px 0; text-align: center; position: relative;
+  }
+  .orp-frame {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline;
+    font-family: var(--serif); font-size: clamp(2.2rem, 7vw, 3.4rem);
+    min-height: 1.5em; line-height: 1.35;
+  }
+  .orp-frame .pre  { text-align: right; white-space: pre; }
+  .orp-frame .orp  { color: var(--pivot); position: relative; white-space: pre; }
+  .orp-frame .post { text-align: left; white-space: pre; }
+  .orp-frame .orp::before, .orp-frame .orp::after {
+    content: ""; position: absolute; left: 50%; transform: translateX(-50%);
+    width: 2px; height: 9px; background: var(--line);
+  }
+  .orp-frame .orp::before { top: -0.42em; }
+  .orp-frame .orp::after  { bottom: -0.32em; }
+  .orp-frame.center { display: block; }
+  .progress {
+    height: 4px; background: var(--line); border-radius: 2px;
+    overflow: hidden; margin-top: 26px;
+  }
+  .progress > div { height: 100%; width: 0%; background: var(--accent); }
+  .stage-meta {
+    display: flex; justify-content: space-between; margin-top: 8px;
+    font-size: 0.8rem; color: var(--ink-3); font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- reading text / pacer ---------- */
+  .reading {
+    font-family: var(--serif); font-size: 1.12rem; line-height: 1.75;
+    max-width: 62ch;
+  }
+  .reading h4 { font-size: 1.25rem; margin: 0 0 12px; }
+  #pacer-text .chunk { border-radius: 4px; padding: 0 2px; }
+  #pacer-text .chunk.lit { background: var(--accent-soft); color: var(--ink); box-shadow: 0 0 0 1px var(--accent); }
+  #pacer-text .chunk.done { color: var(--ink-3); }
+  .scrollbox { max-height: 360px; overflow-y: auto; }
+
+  /* ---------- quiz ---------- */
+  .quiz fieldset { border: none; margin: 0 0 18px; padding: 0; }
+  .quiz legend { font-weight: 600; margin-bottom: 6px; max-width: 62ch; }
+  .quiz label.opt {
+    display: flex; gap: 9px; align-items: flex-start; padding: 7px 10px;
+    border: 1px solid var(--line); border-radius: 7px; margin: 5px 0;
+    cursor: pointer; max-width: 62ch;
+  }
+  .quiz label.opt:hover { border-color: var(--accent); }
+  .quiz label.opt.correct { border-color: var(--good); background: color-mix(in srgb, var(--good) 10%, transparent); }
+  .quiz label.opt.wrong   { border-color: var(--bad);  background: color-mix(in srgb, var(--bad) 10%,  transparent); }
+  .quiz input[type=radio] { accent-color: var(--accent); margin-top: 4px; }
+
+  /* ---------- results / stats ---------- */
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .stat {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 18px; min-width: 128px; flex: 1;
+  }
+  .stat .num {
+    font-family: var(--serif); font-size: 1.75rem; font-weight: 700;
+    font-variant-numeric: tabular-nums; line-height: 1.15;
+  }
+  .stat .num small { font-size: 0.55em; font-weight: 400; color: var(--ink-3); }
+  .verdict { font-weight: 600; }
+  .verdict.pass { color: var(--good); }
+  .verdict.fail { color: var(--bad); }
+
+  /* ---------- plan tab ---------- */
+  .session-steps { list-style: none; padding: 0; margin: 0; counter-reset: step; }
+  .session-steps li {
+    display: grid; grid-template-columns: 52px 1fr; gap: 14px;
+    padding: 12px 0; border-bottom: 1px solid var(--line);
+  }
+  .session-steps li:last-child { border-bottom: none; }
+  .session-steps .mins {
+    font-family: var(--serif); font-size: 1.15rem; font-weight: 700;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  .session-steps .mins small { display: block; font-family: var(--sans); font-size: 0.65rem; font-weight: 400; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.07em; }
+  .session-steps strong { display: block; margin-bottom: 2px; }
+  .session-steps p { margin: 0; font-size: 0.92rem; color: var(--ink-2); }
+  table.weeks { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+  table.weeks th, table.weeks td { text-align: left; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.weeks th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); font-weight: 600; }
+
+  /* ---------- progress tab ---------- */
+  .chart-card h3 { margin-top: 0; }
+  .chart-card { overflow-x: auto; }
+  .chart-card svg { display: block; width: 100%; height: auto; }
+  .chart-sub { font-size: 0.8rem; color: var(--ink-3); margin: 2px 0 10px; }
+  #tooltip {
+    position: fixed; pointer-events: none; display: none; z-index: 10;
+    background: var(--ink); color: var(--bg); font-size: 0.78rem;
+    padding: 5px 9px; border-radius: 6px; white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  table.log { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  table.log th, table.log td {
+    text-align: left; padding: 7px 14px 7px 0; border-bottom: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+  table.log th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); font-weight: 600; }
+  .modechip {
+    display: inline-block; font-size: 0.72rem; padding: 1px 8px; border-radius: 99px;
+    border: 1px solid var(--line); color: var(--ink-2);
+  }
+  .empty { color: var(--ink-3); font-style: italic; }
+
+  footer.site {
+    margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line);
+    font-size: 0.8rem; color: var(--ink-3); max-width: 65ch;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tab, .btn, .quiz label.opt, #pacer-text .chunk { transition: all 0.15s ease; }
+  }
+  @media (max-width: 560px) {
+    .ctl input[type=range] { width: 130px; }
+    .stat { min-width: 104px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <h1 class="wordmark">Tem<span class="pivot-letter">p</span>o</h1>
+  <span class="tagline">speed-reading trainer — honest about the science</span>
+  <button id="theme-btn" type="button">Theme</button>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-view="plan"  type="button">The plan</button>
+  <button class="tab" data-view="test"  type="button">Speed test</button>
+  <button class="tab" data-view="rsvp"  type="button">RSVP sprints</button>
+  <button class="tab" data-view="pacer" type="button">Pacer drill</button>
+  <button class="tab" data-view="progress" type="button">Progress</button>
+</nav>
+
+<main>
+
+<!-- ==================== PLAN ==================== -->
+<section class="view active" id="view-plan">
+  <h2>Train speed without losing the plot</h2>
+  <p class="lede">Fifteen minutes a day. Speed goes up only when comprehension stays up — that gate is the whole method.</p>
+
+  <div class="note">
+    <strong>What the research actually says.</strong> Typical adults read 200–400 words per minute. Controlled studies (Rayner et&nbsp;al., 2016) find comprehension drops sharply past ~500–600 wpm — the bottleneck is language processing, not eye speed. Realistic gains from training are 20–50%, mostly from cutting habitual re-reading, widening your fixation span, and reading more. That's what this app trains. Anyone promising 1,000+ wpm with full comprehension is selling skimming.
+  </div>
+
+  <h3>The daily session — 15 minutes</h3>
+  <div class="card">
+    <ol class="session-steps">
+      <li>
+        <span class="mins">3<small>min</small></span>
+        <div><strong>Warm-up · Pacer drill</strong>
+        <p>Run the pacer at your comfort speed, chunk size 2. Follow the highlight, don't let your eyes jump back. This suppresses regressions before you push speed.</p></div>
+      </li>
+      <li>
+        <span class="mins">8<small>min</small></span>
+        <div><strong>RSVP sprints · 3 rounds</strong>
+        <p>Round 1: comfort +25%. Round 2 (overspeed): comfort +50% — comprehension will wobble, that's the point. Round 3: comfort +10%, which should now feel slow. Take the quiz when a round uses a built-in passage.</p></div>
+      </li>
+      <li>
+        <span class="mins">4<small>min</small></span>
+        <div><strong>Speed test · every other day</strong>
+        <p>Read a fresh passage at natural (not forced) speed, then take the quiz. This measured wpm + comprehension pair is your real progress — the drills are just practice.</p></div>
+      </li>
+    </ol>
+  </div>
+
+  <h3>The progression rule</h3>
+  <p>Your <strong>comfort speed</strong> starts at your baseline test wpm. After each test: comprehension <span style="color:var(--good);font-weight:600">≥ 75% twice in a row → raise comfort speed 10%</span>. Comprehension <span style="color:var(--bad);font-weight:600">&lt; 60% → drop it 10%</span> and hold. Never chase the overspeed number — it's a training stimulus, not your reading speed.</p>
+
+  <h3>Four-week outline</h3>
+  <div class="card" style="overflow-x:auto">
+    <table class="weeks">
+      <tr><th>Week</th><th>Focus</th><th>Settings</th></tr>
+      <tr><td><strong>1</strong></td><td>Baseline + habit. Take the speed test on day 1 — that's your comfort speed. Daily sessions at gentle intensities.</td><td>Chunk 1 · sprints at +10–25%</td></tr>
+      <tr><td><strong>2</strong></td><td>Chunking. Move RSVP and pacer to 2-word chunks to widen fixation span.</td><td>Chunk 2 · sprints at +25%</td></tr>
+      <tr><td><strong>3</strong></td><td>Overspeed. Add the +50% round. Expect comprehension to dip in drills but hold in tests.</td><td>Chunk 2 · overspeed +50%</td></tr>
+      <tr><td><strong>4</strong></td><td>Consolidate. Test every other day; apply the progression rule; try the pacer on your own real reading material.</td><td>Your rules now</td></tr>
+    </table>
+  </div>
+
+  <h3>Ground rules</h3>
+  <p>Use easy material for drills — vocabulary you already know. During tests, read everything once; no skimming, no peeking back. And log every session: the Progress tab only ever counts sessions with a comprehension score, so the numbers stay honest.</p>
+</section>
+
+<!-- ==================== TEST ==================== -->
+<section class="view" id="view-test">
+  <h2>Speed test</h2>
+  <p class="lede">Read at your natural speed, then answer four questions. You'll get a measured wpm and a comprehension score — both are logged.</p>
+
+  <div id="test-setup">
+    <div class="controls">
+      <div class="ctl">
+        <span class="label">Passage</span>
+        <select id="test-passage"></select>
+      </div>
+      <button class="btn" id="test-start" type="button">Start reading</button>
+    </div>
+    <p class="hint">The timer starts when the passage appears and stops when you press “I've finished”. Passages you've already tested are marked.</p>
+  </div>
+
+  <div id="test-reading" hidden>
+    <div class="card reading" id="test-text"></div>
+    <div class="btnrow">
+      <button class="btn" id="test-done" type="button">I've finished reading</button>
+    </div>
+  </div>
+
+  <div id="test-quiz" hidden></div>
+  <div id="test-result" hidden></div>
+</section>
+
+<!-- ==================== RSVP ==================== -->
+<section class="view" id="view-rsvp">
+  <h2>RSVP sprints</h2>
+  <p class="lede">Words flash at a fixed point — your eyes never move, so the pace is fully controlled. The red letter marks the optimal recognition point; keep your gaze locked on it.</p>
+
+  <div class="controls">
+    <div class="ctl">
+      <span class="label">Text</span>
+      <select id="rsvp-source">
+        <option value="sample">Sample: how this works</option>
+        <option value="custom">Paste your own…</option>
+      </select>
+    </div>
+    <div class="ctl">
+      <span class="label">Speed</span>
+      <input type="range" id="rsvp-wpm" min="150" max="800" step="25" value="300">
+      <span class="val"><span id="rsvp-wpm-val">300</span> wpm</span>
+    </div>
+    <div class="ctl">
+      <span class="label">Chunk</span>
+      <input type="range" id="rsvp-chunk" min="1" max="3" step="1" value="1">
+      <span class="val"><span id="rsvp-chunk-val">1</span> word(s)</span>
+    </div>
+  </div>
+  <div id="rsvp-custom-wrap" hidden>
+    <textarea id="rsvp-custom" placeholder="Paste any text here — an article, a chapter, your own notes…"></textarea>
+  </div>
+
+  <div class="stage">
+    <div class="orp-frame" id="rsvp-display" aria-live="off"><span class="pre"></span><span class="orp">Ready</span><span class="post"></span></div>
+    <div class="progress"><div id="rsvp-bar"></div></div>
+    <div class="stage-meta"><span id="rsvp-count">–</span><span id="rsvp-eta">–</span></div>
+  </div>
+
+  <div class="btnrow">
+    <button class="btn" id="rsvp-play" type="button">Start</button>
+    <button class="btn ghost" id="rsvp-restart" type="button">Restart</button>
+    <span class="hint" style="align-self:center"><kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> speed ±25</span>
+  </div>
+
+  <div id="rsvp-finish" hidden></div>
+  <div id="rsvp-quiz" hidden></div>
+</section>
+
+<!-- ==================== PACER ==================== -->
+<section class="view" id="view-pacer">
+  <h2>Pacer drill</h2>
+  <p class="lede">A moving highlight sweeps real text in chunks — like a finger under the line. It trains forward momentum on a normal page, where RSVP gains have to transfer.</p>
+
+  <div class="controls">
+    <div class="ctl">
+      <span class="label">Text</span>
+      <select id="pacer-source">
+        <option value="sample">Sample: how this works</option>
+        <option value="custom">Paste your own…</option>
+      </select>
+    </div>
+    <div class="ctl">
+      <span class="label">Speed</span>
+      <input type="range" id="pacer-wpm" min="150" max="800" step="25" value="300">
+      <span class="val"><span id="pacer-wpm-val">300</span> wpm</span>
+    </div>
+    <div class="ctl">
+      <span class="label">Chunk</span>
+      <input type="range" id="pacer-chunk" min="1" max="4" step="1" value="2">
+      <span class="val"><span id="pacer-chunk-val">2</span> words</span>
+    </div>
+  </div>
+  <div id="pacer-custom-wrap" hidden>
+    <textarea id="pacer-custom" placeholder="Paste any text here…"></textarea>
+  </div>
+
+  <div class="card reading scrollbox"><div id="pacer-text"></div></div>
+
+  <div class="btnrow">
+    <button class="btn" id="pacer-play" type="button">Start</button>
+    <button class="btn ghost" id="pacer-restart" type="button">Restart</button>
+    <span class="hint" style="align-self:center"><kbd>Space</kbd> play/pause</span>
+  </div>
+
+  <div id="pacer-finish" hidden></div>
+  <div id="pacer-quiz" hidden></div>
+</section>
+
+<!-- ==================== PROGRESS ==================== -->
+<section class="view" id="view-progress">
+  <h2>Progress</h2>
+  <p class="lede">Only sessions with a comprehension score count toward the charts — speed you can't recall isn't reading.</p>
+
+  <div id="prog-stats" class="stat-row"></div>
+
+  <div class="card chart-card">
+    <h3>Reading speed</h3>
+    <p class="chart-sub">Verified sessions (quiz taken), words per minute</p>
+    <div id="chart-wpm"></div>
+  </div>
+
+  <div class="card chart-card">
+    <h3>Comprehension</h3>
+    <p class="chart-sub">Quiz score per session — the dotted line is the 75% progression gate</p>
+    <div id="chart-comp"></div>
+  </div>
+
+  <h3>All sessions</h3>
+  <div class="card" style="overflow-x:auto">
+    <div id="prog-table"></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn ghost" id="prog-clear" type="button">Clear all data</button>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  Tempo stores everything in your browser (localStorage) — nothing leaves this page.
+  Method based on Rayner, Schotter, Masson, Potter &amp; Treiman (2016), “So Much to Read, So Little Time.”
+</footer>
+
+</div>
+<div id="tooltip" role="status"></div>
+
+<script>
+"use strict";
+
+/* ==================== content ==================== */
+
+const SAMPLE_TEXT = `Here is how this training works. Your reading speed is limited less by your eyes than by three habits: silently voicing every word, re-reading lines you already understood, and fixating on almost every single word. Each drill in this app targets one of those habits. The RSVP display flashes words at a fixed point, so regressions become impossible and the pace is set for you, slightly faster than comfortable. The pacer drill moves a highlight through normal text, training the same forward momentum in the format you actually read every day. The speed test measures what genuinely matters: how fast you read when nobody is pushing, and how much you can answer about it afterward. Speed without recall is not reading, which is why this app only charts sessions that end with a quiz. Expect the overspeed rounds to feel chaotic at first. That is normal and even useful, because after sixty seconds at four hundred and fifty words per minute, your old comfort speed feels slow, and settling ten percent above it feels easy. Keep sessions short, use easy material for drills, and let the test numbers, not the drill numbers, tell you whether you are improving.`;
+
+const PASSAGES = [
+  {
+    id: "octopus",
+    title: "The Distributed Mind of the Octopus",
+    text: `An octopus does not keep its mind in one place. Of its roughly five hundred million neurons, nearly two thirds sit not in the brain but in the arms themselves, arranged in clusters along each limb. The result is an animal whose arms can act with startling independence. A severed octopus arm, in laboratory studies, will still reach for food and attempt to pass it toward a mouth that is no longer there. Each arm tastes what it touches, since the suckers are packed with chemical receptors, so an octopus exploring a crevice is in a real sense tasting the rock with eight tongues at once. The central brain, wrapped in a ring around the esophagus, seems to issue broad commands, such as which direction to travel or whether to hunt, while leaving the fine choreography of several hundred suckers to local circuits. This division of labor may explain how octopuses manage feats that would overwhelm a centralized nervous system, like changing both the color and the texture of their skin in under a second to match a patch of seaweed. It also complicates the question of what the animal experiences. When an octopus solves a puzzle box, unscrewing a jar from the inside to reach a crab, it is not clear whether one mind solved it or a committee did. Researchers who study them describe a persistent, unsettling impression: the sense of being watched back with intent, by something built on a completely different plan from any vertebrate, whose last common ancestor with us was probably a flatworm six hundred million years ago.`,
+    quiz: [
+      { q: "Where do most of an octopus's neurons sit?", o: ["In the central brain", "In the arms", "Around the eyes", "In the skin"], a: 1 },
+      { q: "What do the suckers' chemical receptors let an octopus do?", o: ["Change color faster", "Sense water temperature", "Taste what it touches", "Sting its prey"], a: 2 },
+      { q: "According to the passage, the central brain mostly handles…", o: ["Broad commands like direction and hunting", "The choreography of individual suckers", "Digesting food", "Producing ink"], a: 0 },
+      { q: "The last common ancestor of octopuses and humans was probably a…", o: ["Fish", "Jellyfish", "Snail", "Flatworm"], a: 3 }
+    ]
+  },
+  {
+    id: "pony",
+    title: "Eighteen Months of the Pony Express",
+    text: `The Pony Express is remembered as if it ran for generations, yet the whole enterprise lasted about eighteen months. Beginning in April 1860, relays of riders carried mail nearly two thousand miles between St. Joseph, Missouri, and Sacramento, California, in roughly ten days, a journey that took mail coaches three weeks or more. The system was a machine built from horses: around one hundred ninety stations spaced ten to fifteen miles apart, the distance a horse could gallop hard before tiring. A rider would swap horses at each station in under two minutes, transferring a locked leather mail cover called a mochila, and hand off to a fresh rider after seventy five to one hundred miles. Riders were paid well for the era, around one hundred dollars a month, but the advertised job requirements were blunt about the risks, and company lore claimed orphans were preferred. Speed was the entire product. When Lincoln's first inaugural address needed to reach California, riders relayed it in seven days and seventeen hours, a record. But the business never made money. The founders had gambled on winning a government mail contract that never came, and the service charged five dollars per half ounce at the start, an enormous sum, while losing money on every letter. The end arrived by wire, not by weather or war parties: two days after the transcontinental telegraph was completed in October 1861, the Pony Express announced its closure, instantly obsolete. Its fame was manufactured afterward, largely by Buffalo Bill's Wild West show, which turned a failed courier startup into an American legend.`,
+    quiz: [
+      { q: "Roughly how long did the Pony Express operate?", o: ["Eighteen months", "Five years", "A decade", "Three months"], a: 0 },
+      { q: "Why were stations placed ten to fifteen miles apart?", o: ["That was the spacing of towns", "The distance a horse could gallop hard", "Legal requirements for mail routes", "The range of the telegraph"], a: 1 },
+      { q: "What actually ended the Pony Express?", o: ["Attacks on stations", "The Civil War", "The transcontinental telegraph", "A government ban"], a: 2 },
+      { q: "The passage says its lasting fame was largely created by…", o: ["Newspaper coverage at the time", "The U.S. Post Office", "Lincoln's speeches", "Buffalo Bill's Wild West show"], a: 3 }
+    ]
+  },
+  {
+    id: "container",
+    title: "The Box That Shrank the World",
+    text: `Before the shipping container, moving cargo across an ocean was mostly the art of stuffing odd-shaped things into a ship's hold by hand. Longshoremen wrestled barrels, bales, and crates one at a time, and a vessel could spend more time tied to the dock being loaded than actually sailing. In 1956, an American trucking entrepreneur named Malcom McLean tried something different: he loaded fifty eight truck trailers, detached from their wheels, onto a converted tanker called the Ideal X and sailed them from Newark to Houston. His insight was not the box itself but the system around it. If every container had identical corner fittings, then the same cranes, chassis, ships, and rail cars anywhere on earth could handle any of them without anyone touching the goods inside. Loading costs collapsed from around five dollars and eighty six cents per ton to under sixteen cents, and port time shrank from weeks to hours. The effects reached far beyond shipping. Once transport became nearly free, factories no longer needed to sit near ports or near their customers, and supply chains stretched across whole hemispheres; a single pair of sneakers could economically gather its rubber, fabric, and assembly from three continents. Old dockside neighborhoods emptied as work moved to vast automated terminals, and the longshoremen's trade shrank to a fraction of its former size. Standardization took a decade of committee fights over lengths and fittings, but the result, the twenty and forty foot boxes stacked on every modern ship, became arguably the most consequential transportation invention of the twentieth century, an economic engine hiding in plain sight.`,
+    quiz: [
+      { q: "What did Malcom McLean ship on the Ideal X in 1956?", o: ["Fifty-eight truck trailers without wheels", "A cargo of barrels and bales", "The first refrigerated cargo", "Rail cars full of coal"], a: 0 },
+      { q: "The passage argues McLean's key insight was…", o: ["Building bigger ships", "Cheaper steel boxes", "A standardized system any crane or ship could handle", "Hiring fewer longshoremen"], a: 2 },
+      { q: "What happened to loading costs per ton?", o: ["They roughly halved", "They fell from about $5.86 to under 16 cents", "They stayed flat but ports got faster", "They rose at first for a decade"], a: 1 },
+      { q: "One downstream effect described in the passage:", o: ["Ships began sailing faster", "Ports moved inland", "Customs duties were abolished", "Factories no longer needed to sit near ports"], a: 3 }
+    ]
+  }
+];
+
+/* ==================== state & helpers ==================== */
+
+const LOG_KEY = "tempo-log-v1";
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const tokenize = t => t.trim().split(/\s+/).filter(Boolean);
+const fmtDate = iso => new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+
+function loadLog() { try { return JSON.parse(localStorage.getItem(LOG_KEY)) || []; } catch { return []; } }
+function saveLog(l) { localStorage.setItem(LOG_KEY, JSON.stringify(l)); }
+function addEntry(e) { const l = loadLog(); l.push(e); saveLog(l); }
+
+/* word display duration multiplier: long words & punctuation earn extra time */
+function wordWeight(w) {
+  let m = 1;
+  if (w.replace(/[^A-Za-z0-9]/g, "").length >= 9) m += 0.4;
+  if (/[.!?;]["')\]]?$/.test(w)) m += 0.9;
+  else if (/[,:]["')\]]?$/.test(w)) m += 0.3;
+  return m;
+}
+function orpIndex(w) {
+  const n = w.length;
+  if (n <= 1) return 0;
+  if (n <= 5) return 1;
+  if (n <= 9) return 2;
+  return 3;
+}
+
+/* ==================== tabs & theme ==================== */
+
+$$(".tab").forEach(btn => btn.addEventListener("click", () => {
+  $$(".tab").forEach(b => b.classList.toggle("active", b === btn));
+  $$("main .view").forEach(v => v.classList.toggle("active", v.id === "view-" + btn.dataset.view));
+  rsvp.pause(); pacer.pause();
+  if (btn.dataset.view === "progress") renderProgress();
+}));
+
+const themeBtn = $("#theme-btn");
+function effectiveTheme() {
+  const t = document.documentElement.dataset.theme;
+  if (t) return t;
+  return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+themeBtn.addEventListener("click", () => {
+  const next = effectiveTheme() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem("tempo-theme", next); } catch {}
+  if ($("#view-progress").classList.contains("active")) renderProgress();
+});
+try {
+  const saved = localStorage.getItem("tempo-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch {}
+
+/* ==================== quiz component ==================== */
+
+function runQuiz(passage, container, onDone) {
+  container.hidden = false;
+  const qHtml = passage.quiz.map((item, qi) => `
+    <fieldset data-q="${qi}">
+      <legend>${qi + 1}. ${item.q}</legend>
+      ${item.o.map((opt, oi) => `
+        <label class="opt"><input type="radio" name="q${qi}" value="${oi}"> <span>${opt}</span></label>
+      `).join("")}
+    </fieldset>`).join("");
+  container.innerHTML = `<div class="card quiz">
+    <h3 style="margin-top:0">Quiz — ${passage.title}</h3>
+    ${qHtml}
+    <button class="btn" type="button" data-submit>Check answers</button>
+  </div>`;
+  container.querySelector("[data-submit]").addEventListener("click", () => {
+    let correct = 0;
+    passage.quiz.forEach((item, qi) => {
+      const fs = container.querySelector(`fieldset[data-q="${qi}"]`);
+      const picked = fs.querySelector("input:checked");
+      const val = picked ? +picked.value : -1;
+      fs.querySelectorAll("label.opt").forEach((lab, oi) => {
+        if (oi === item.a) lab.classList.add("correct");
+        else if (oi === val) lab.classList.add("wrong");
+        lab.querySelector("input").disabled = true;
+      });
+      if (val === item.a) correct++;
+    });
+    container.querySelector("[data-submit]").remove();
+    onDone(Math.round(100 * correct / passage.quiz.length), correct);
+  });
+  container.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+}
+function prefersReduced() { return matchMedia("(prefers-reduced-motion: reduce)").matches; }
+
+/* ==================== source selects (rsvp & pacer) ==================== */
+
+function fillSourceSelect(sel) {
+  PASSAGES.forEach(p => {
+    const o = document.createElement("option");
+    o.value = p.id; o.textContent = "Passage: " + p.title;
+    sel.appendChild(o);
+  });
+}
+function resolveSource(sel, ta) {
+  const v = sel.value;
+  if (v === "sample") return { text: SAMPLE_TEXT, passage: null, label: "sample" };
+  if (v === "custom") return { text: ta.value.trim() || SAMPLE_TEXT, passage: null, label: "custom text" };
+  const p = PASSAGES.find(p => p.id === v);
+  return { text: p.text, passage: p, label: p.title };
+}
+
+/* ==================== RSVP engine ==================== */
+
+const rsvp = {
+  chunks: [], idx: 0, playing: false, timer: null,
+  totalWords: 0, elapsed: 0, tickStart: 0, source: null,
+
+  els: {
+    display: $("#rsvp-display"), bar: $("#rsvp-bar"), count: $("#rsvp-count"),
+    eta: $("#rsvp-eta"), play: $("#rsvp-play"), wpm: $("#rsvp-wpm"),
+    chunk: $("#rsvp-chunk"), finish: $("#rsvp-finish"), quiz: $("#rsvp-quiz")
+  },
+
+  build() {
+    this.pause();
+    this.source = resolveSource($("#rsvp-source"), $("#rsvp-custom"));
+    const ws = tokenize(this.source.text);
+    const size = +this.els.chunk.value;
+    this.chunks = [];
+    for (let i = 0; i < ws.length; i += size) this.chunks.push(ws.slice(i, i + size));
+    this.totalWords = ws.length;
+    this.idx = 0; this.elapsed = 0;
+    this.els.finish.hidden = true; this.els.finish.innerHTML = "";
+    this.els.quiz.hidden = true; this.els.quiz.innerHTML = "";
+    this.showChunk(null, "Ready");
+    this.updateMeta();
+    this.els.bar.style.width = "0%";
+  },
+
+  chunkDur(chunk) {
+    const base = 60000 / +this.els.wpm.value;
+    return chunk.reduce((s, w) => s + base * wordWeight(w), 0);
+  },
+
+  showChunk(chunk, placeholder) {
+    const d = this.els.display;
+    if (!chunk) {
+      d.classList.add("center");
+      d.innerHTML = `<span class="orp" style="color:var(--ink-3)">${placeholder}</span>`;
+      return;
+    }
+    if (chunk.length === 1) {
+      const w = chunk[0], i = orpIndex(w);
+      d.classList.remove("center");
+      d.innerHTML = `<span class="pre"></span><span class="orp"></span><span class="post"></span>`;
+      d.children[0].textContent = w.slice(0, i);
+      d.children[1].textContent = w[i] || "";
+      d.children[2].textContent = w.slice(i + 1);
+    } else {
+      d.classList.add("center");
+      const span = document.createElement("span");
+      span.textContent = chunk.join(" ");
+      d.innerHTML = ""; d.appendChild(span);
+    }
+  },
+
+  updateMeta() {
+    const done = this.chunks.slice(0, this.idx).reduce((s, c) => s + c.length, 0);
+    this.els.count.textContent = `${done} / ${this.totalWords} words`;
+    const remaining = this.chunks.slice(this.idx).reduce((s, c) => s + this.chunkDur(c), 0);
+    this.els.eta.textContent = `~${Math.ceil(remaining / 1000)}s left`;
+  },
+
+  step() {
+    if (this.idx >= this.chunks.length) { this.finish(); return; }
+    const chunk = this.chunks[this.idx];
+    this.showChunk(chunk);
+    this.els.bar.style.width = (100 * (this.idx + 1) / this.chunks.length) + "%";
+    const dur = this.chunkDur(chunk);
+    this.idx++;
+    this.updateMeta();
+    this.timer = setTimeout(() => { this.elapsed += dur; this.step(); }, dur);
+  },
+
+  play() {
+    if (this.playing) return;
+    if (!this.chunks.length || this.idx >= this.chunks.length) this.build();
+    if (!this.chunks.length) return;
+    this.playing = true;
+    this.els.play.textContent = "Pause";
+    let n = 3;
+    const cd = () => {
+      if (!this.playing) return;
+      if (n > 0) { this.showChunk(null, String(n)); n--; this.timer = setTimeout(cd, 450); }
+      else this.step();
+    };
+    if (this.idx === 0) cd(); else this.step();
+  },
+
+  pause() {
+    if (!this.playing) return;
+    this.playing = false;
+    clearTimeout(this.timer);
+    this.els.play.textContent = this.idx > 0 && this.idx < this.chunks.length ? "Resume" : "Start";
+  },
+
+  toggle() { this.playing ? this.pause() : this.play(); },
+
+  finish() {
+    this.playing = false;
+    this.els.play.textContent = "Start";
+    this.showChunk(null, "Done");
+    const mins = this.elapsed / 60000;
+    const effWpm = Math.round(this.totalWords / mins);
+    const f = this.els.finish;
+    f.hidden = false;
+    f.innerHTML = `<div class="card">
+      <strong>Sprint complete.</strong> ${this.totalWords} words in ${Math.round(this.elapsed / 1000)}s — effective <strong>${effWpm} wpm</strong>.
+      <div class="btnrow" style="margin-bottom:0">
+        ${this.source.passage ? `<button class="btn" data-quiz type="button">Take the quiz</button>` : ""}
+        <button class="btn ghost" data-log type="button">Log without quiz</button>
+      </div>
+      <p class="hint" style="margin-bottom:0">Only quizzed sessions appear in the Progress charts.</p>
+    </div>`;
+    const p = this.source.passage;
+    if (p) f.querySelector("[data-quiz]").addEventListener("click", () => {
+      f.hidden = true;
+      runQuiz(p, this.els.quiz, (pct) => {
+        addEntry({ t: new Date().toISOString(), mode: "rsvp", wpm: effWpm, comp: pct, passage: p.title });
+        this.els.quiz.insertAdjacentHTML("beforeend",
+          `<div class="note"><strong>${pct}% comprehension</strong> at ${effWpm} wpm — logged. ${pct >= 75 ? "Gate passed: this speed is earning its keep." : "Below the 75% gate — drop the speed a notch next round."}</div>`);
+      });
+    });
+    f.querySelector("[data-log]").addEventListener("click", (e) => {
+      addEntry({ t: new Date().toISOString(), mode: "rsvp", wpm: effWpm, comp: null, passage: this.source.label });
+      e.target.textContent = "Logged ✓"; e.target.disabled = true;
+    });
+  }
+};
+
+fillSourceSelect($("#rsvp-source"));
+$("#rsvp-source").addEventListener("change", () => {
+  $("#rsvp-custom-wrap").hidden = $("#rsvp-source").value !== "custom";
+  rsvp.build();
+});
+$("#rsvp-custom").addEventListener("input", () => rsvp.build());
+$("#rsvp-chunk").addEventListener("input", () => {
+  $("#rsvp-chunk-val").textContent = $("#rsvp-chunk").value;
+  rsvp.build();
+});
+$("#rsvp-wpm").addEventListener("input", () => {
+  $("#rsvp-wpm-val").textContent = $("#rsvp-wpm").value;
+  rsvp.updateMeta();
+});
+$("#rsvp-play").addEventListener("click", () => rsvp.toggle());
+$("#rsvp-restart").addEventListener("click", () => rsvp.build());
+rsvp.build();
+
+/* ==================== Pacer engine ==================== */
+
+const pacer = {
+  spans: [], durs: [], idx: 0, playing: false, timer: null,
+  totalWords: 0, elapsed: 0, source: null,
+
+  els: {
+    text: $("#pacer-text"), play: $("#pacer-play"), wpm: $("#pacer-wpm"),
+    chunk: $("#pacer-chunk"), finish: $("#pacer-finish"), quiz: $("#pacer-quiz")
+  },
+
+  build() {
+    this.pause();
+    this.source = resolveSource($("#pacer-source"), $("#pacer-custom"));
+    const ws = tokenize(this.source.text);
+    const size = +this.els.chunk.value;
+    this.els.text.innerHTML = "";
+    this.spans = []; this.durs = [];
+    for (let i = 0; i < ws.length; i += size) {
+      const chunk = ws.slice(i, i + size);
+      const span = document.createElement("span");
+      span.className = "chunk";
+      span.textContent = chunk.join(" ");
+      this.els.text.appendChild(span);
+      this.els.text.appendChild(document.createTextNode(" "));
+      this.spans.push(span);
+      this.durs.push(chunk.map(wordWeight));
+    }
+    this.totalWords = ws.length;
+    this.idx = 0; this.elapsed = 0;
+    this.els.finish.hidden = true; this.els.finish.innerHTML = "";
+    this.els.quiz.hidden = true; this.els.quiz.innerHTML = "";
+  },
+
+  step() {
+    if (this.idx > 0) {
+      this.spans[this.idx - 1].classList.remove("lit");
+      this.spans[this.idx - 1].classList.add("done");
+    }
+    if (this.idx >= this.spans.length) { this.finish(); return; }
+    const span = this.spans[this.idx];
+    span.classList.add("lit");
+    span.scrollIntoView({ block: "center", behavior: prefersReduced() ? "auto" : "smooth" });
+    const base = 60000 / +this.els.wpm.value;
+    const dur = this.durs[this.idx].reduce((s, m) => s + base * m, 0);
+    this.idx++;
+    this.timer = setTimeout(() => { this.elapsed += dur; this.step(); }, dur);
+  },
+
+  play() {
+    if (this.playing) return;
+    if (!this.spans.length || this.idx >= this.spans.length) this.build();
+    if (!this.spans.length) return;
+    this.playing = true;
+    this.els.play.textContent = "Pause";
+    this.step();
+  },
+
+  pause() {
+    if (!this.playing) return;
+    this.playing = false;
+    clearTimeout(this.timer);
+    if (this.idx > 0 && this.idx <= this.spans.length) {
+      this.idx--; this.spans[this.idx].classList.remove("lit");
+    }
+    this.els.play.textContent = this.idx > 0 && this.idx < this.spans.length ? "Resume" : "Start";
+  },
+
+  toggle() { this.playing ? this.pause() : this.play(); },
+
+  finish() {
+    this.playing = false;
+    this.els.play.textContent = "Start";
+    const mins = this.elapsed / 60000;
+    const effWpm = Math.round(this.totalWords / mins);
+    const f = this.els.finish;
+    f.hidden = false;
+    f.innerHTML = `<div class="card">
+      <strong>Drill complete.</strong> ${this.totalWords} words at effective <strong>${effWpm} wpm</strong>.
+      <div class="btnrow" style="margin-bottom:0">
+        ${this.source.passage ? `<button class="btn" data-quiz type="button">Take the quiz</button>` : ""}
+        <button class="btn ghost" data-log type="button">Log without quiz</button>
+      </div>
+    </div>`;
+    const p = this.source.passage;
+    if (p) f.querySelector("[data-quiz]").addEventListener("click", () => {
+      f.hidden = true;
+      runQuiz(p, this.els.quiz, (pct) => {
+        addEntry({ t: new Date().toISOString(), mode: "pacer", wpm: effWpm, comp: pct, passage: p.title });
+        this.els.quiz.insertAdjacentHTML("beforeend",
+          `<div class="note"><strong>${pct}% comprehension</strong> at ${effWpm} wpm — logged.</div>`);
+      });
+    });
+    f.querySelector("[data-log]").addEventListener("click", (e) => {
+      addEntry({ t: new Date().toISOString(), mode: "pacer", wpm: effWpm, comp: null, passage: this.source.label });
+      e.target.textContent = "Logged ✓"; e.target.disabled = true;
+    });
+  }
+};
+
+fillSourceSelect($("#pacer-source"));
+$("#pacer-source").addEventListener("change", () => {
+  $("#pacer-custom-wrap").hidden = $("#pacer-source").value !== "custom";
+  pacer.build();
+});
+$("#pacer-custom").addEventListener("input", () => pacer.build());
+$("#pacer-chunk").addEventListener("input", () => {
+  $("#pacer-chunk-val").textContent = $("#pacer-chunk").value;
+  pacer.build();
+});
+$("#pacer-wpm").addEventListener("input", () => {
+  $("#pacer-wpm-val").textContent = $("#pacer-wpm").value;
+});
+$("#pacer-play").addEventListener("click", () => pacer.toggle());
+$("#pacer-restart").addEventListener("click", () => pacer.build());
+pacer.build();
+
+/* keyboard shortcuts, scoped to visible drill */
+document.addEventListener("keydown", (e) => {
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+  const inRsvp = $("#view-rsvp").classList.contains("active");
+  const inPacer = $("#view-pacer").classList.contains("active");
+  if (e.code === "Space" && (inRsvp || inPacer)) {
+    e.preventDefault();
+    (inRsvp ? rsvp : pacer).toggle();
+  }
+  if (inRsvp && (e.code === "ArrowLeft" || e.code === "ArrowRight")) {
+    const w = $("#rsvp-wpm");
+    w.value = +w.value + (e.code === "ArrowRight" ? 25 : -25);
+    $("#rsvp-wpm-val").textContent = w.value;
+    rsvp.updateMeta();
+  }
+});
+
+/* ==================== Speed test ==================== */
+
+const test = { t0: 0, passage: null };
+
+function fillTestSelect() {
+  const sel = $("#test-passage");
+  const tested = new Set(loadLog().filter(e => e.mode === "test").map(e => e.passage));
+  sel.innerHTML = "";
+  PASSAGES.forEach(p => {
+    const o = document.createElement("option");
+    o.value = p.id;
+    o.textContent = p.title + (tested.has(p.title) ? " (tested)" : "");
+    sel.appendChild(o);
+  });
+  const fresh = PASSAGES.find(p => !tested.has(p.title));
+  if (fresh) sel.value = fresh.id;
+}
+fillTestSelect();
+
+$("#test-start").addEventListener("click", () => {
+  test.passage = PASSAGES.find(p => p.id === $("#test-passage").value);
+  $("#test-setup").hidden = true;
+  $("#test-result").hidden = true; $("#test-result").innerHTML = "";
+  $("#test-quiz").hidden = true; $("#test-quiz").innerHTML = "";
+  $("#test-text").innerHTML = `<h4>${test.passage.title}</h4>` +
+    test.passage.text.split(/\n+/).map(p => `<p>${p}</p>`).join("");
+  $("#test-reading").hidden = false;
+  test.t0 = performance.now();
+});
+
+$("#test-done").addEventListener("click", () => {
+  const mins = (performance.now() - test.t0) / 60000;
+  const wpm = Math.round(tokenize(test.passage.text).length / mins);
+  $("#test-reading").hidden = true;
+  runQuiz(test.passage, $("#test-quiz"), (pct) => {
+    addEntry({ t: new Date().toISOString(), mode: "test", wpm, comp: pct, passage: test.passage.title });
+    const pass = pct >= 75;
+    let advice;
+    if (pass) advice = "Gate passed. If your last two tests both cleared 75%, raise your drill comfort speed by 10%.";
+    else if (pct >= 60) advice = "Close — hold your current comfort speed and retest in a day or two.";
+    else advice = "Below 60% — drop your drill speeds by 10% and rebuild from there.";
+    const r = $("#test-result");
+    r.hidden = false;
+    r.innerHTML = `
+      <div class="stat-row">
+        <div class="stat"><span class="label">Measured speed</span><div class="num">${wpm}<small> wpm</small></div></div>
+        <div class="stat"><span class="label">Comprehension</span><div class="num">${pct}<small> %</small></div>
+          <span class="verdict ${pass ? "pass" : "fail"}">${pass ? "≥ 75% — counts" : "below the 75% gate"}</span></div>
+      </div>
+      <div class="note">${advice}</div>
+      <div class="btnrow"><button class="btn ghost" id="test-again" type="button">Test another passage</button></div>`;
+    $("#test-again").addEventListener("click", () => {
+      fillTestSelect();
+      $("#test-setup").hidden = false;
+      r.hidden = true; r.innerHTML = "";
+      $("#test-quiz").hidden = true; $("#test-quiz").innerHTML = "";
+    });
+    r.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "nearest" });
+  });
+});
+
+/* ==================== Progress ==================== */
+
+const tooltip = $("#tooltip");
+function tipShow(e, html) {
+  tooltip.innerHTML = html;
+  tooltip.style.display = "block";
+  tipMove(e);
+}
+function tipMove(e) {
+  const pad = 14;
+  let x = e.clientX + pad, y = e.clientY - 10;
+  const r = tooltip.getBoundingClientRect();
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad;
+  tooltip.style.left = x + "px"; tooltip.style.top = y + "px";
+}
+function tipHide() { tooltip.style.display = "none"; }
+
+function svgEl(w, h) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("role", "img");
+  return svg;
+}
+function addNode(svg, tag, attrs) {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) el.setAttribute(k, attrs[k]);
+  svg.appendChild(el);
+  return el;
+}
+
+function renderProgress() {
+  const log = loadLog();
+  const verified = log.filter(e => e.comp !== null && e.comp !== undefined);
+  const tests = log.filter(e => e.mode === "test");
+
+  /* stats */
+  const baseline = tests.length ? tests[0].wpm : null;
+  const bestVerified = verified.filter(e => e.comp >= 75);
+  const best = bestVerified.length ? Math.max(...bestVerified.map(e => e.wpm)) : null;
+  const gain = baseline && best ? Math.round(100 * (best - baseline) / baseline) : null;
+  $("#prog-stats").innerHTML = `
+    <div class="stat"><span class="label">Baseline</span><div class="num">${baseline ?? "–"}<small>${baseline ? " wpm" : ""}</small></div></div>
+    <div class="stat"><span class="label">Best at ≥75%</span><div class="num">${best ?? "–"}<small>${best ? " wpm" : ""}</small></div></div>
+    <div class="stat"><span class="label">Gain</span><div class="num">${gain !== null ? (gain > 0 ? "+" : "") + gain : "–"}<small>${gain !== null ? " %" : ""}</small></div></div>
+    <div class="stat"><span class="label">Sessions</span><div class="num">${log.length}</div></div>`;
+
+  drawWpmChart(verified);
+  drawCompChart(verified);
+  drawTable(log);
+}
+
+const CHART = { w: 640, h: 200, padL: 44, padR: 14, padT: 14, padB: 26 };
+
+function chartScales(data, yMinRaw, yMaxRaw) {
+  const { w, h, padL, padR, padT, padB } = CHART;
+  const iw = w - padL - padR, ih = h - padT - padB;
+  const x = i => data.length === 1 ? padL + iw / 2 : padL + (i / (data.length - 1)) * iw;
+  const y = v => padT + ih - ((v - yMinRaw) / (yMaxRaw - yMinRaw)) * ih;
+  return { x, y, iw, ih };
+}
+
+function chartFrame(svg, yTicks, yFmt, s) {
+  const { padL, padR, w } = CHART;
+  yTicks.forEach(v => {
+    addNode(svg, "line", { x1: padL, x2: w - padR, y1: s.y(v), y2: s.y(v),
+      stroke: "var(--line)", "stroke-width": 1 });
+    const t = addNode(svg, "text", { x: padL - 8, y: s.y(v) + 4, "text-anchor": "end",
+      fill: "var(--ink-3)", "font-size": 11, "font-family": "var(--sans)" });
+    t.textContent = yFmt(v);
+  });
+}
+
+function emptyChart(el, msg) {
+  el.innerHTML = `<p class="empty">${msg}</p>`;
+}
+
+function drawWpmChart(data) {
+  const el = $("#chart-wpm");
+  if (data.length < 2) return emptyChart(el, "Complete two quizzed sessions and your speed line appears here.");
+  const vals = data.map(e => e.wpm);
+  let lo = Math.floor(Math.min(...vals) / 50) * 50 - 50;
+  let hi = Math.ceil(Math.max(...vals) / 50) * 50 + 50;
+  lo = Math.max(0, lo);
+  const s = chartScales(data, lo, hi);
+  const svg = svgEl(CHART.w, CHART.h);
+  const ticks = [];
+  const step = Math.max(50, Math.round((hi - lo) / 4 / 50) * 50);
+  for (let v = lo; v <= hi; v += step) ticks.push(v);
+  chartFrame(svg, ticks, v => String(v), s);
+
+  const pts = data.map((e, i) => [s.x(i), s.y(e.wpm)]);
+  addNode(svg, "path", {
+    d: "M" + pts.map(p => p.map(n => n.toFixed(1)).join(",")).join(" L"),
+    fill: "none", stroke: "var(--chart-1)", "stroke-width": 2,
+    "stroke-linejoin": "round", "stroke-linecap": "round"
+  });
+  data.forEach((e, i) => {
+    const last = i === data.length - 1;
+    const c = addNode(svg, "circle", {
+      cx: pts[i][0].toFixed(1), cy: pts[i][1].toFixed(1), r: last ? 5 : 3.5,
+      fill: "var(--chart-1)", stroke: "var(--surface)", "stroke-width": 2
+    });
+    const hit = addNode(svg, "circle", {
+      cx: pts[i][0].toFixed(1), cy: pts[i][1].toFixed(1), r: 12, fill: "transparent"
+    });
+    hit.addEventListener("mouseenter", ev => tipShow(ev, `${fmtDate(e.t)} · ${e.mode} — <strong>${e.wpm} wpm</strong> · ${e.comp}%`));
+    hit.addEventListener("mousemove", tipMove);
+    hit.addEventListener("mouseleave", tipHide);
+    if (last) {
+      const t = addNode(svg, "text", {
+        x: pts[i][0] - 8, y: pts[i][1] - 10, "text-anchor": "end",
+        fill: "var(--ink)", "font-size": 12, "font-weight": 600, "font-family": "var(--sans)"
+      });
+      t.textContent = e.wpm + " wpm";
+    }
+  });
+  el.innerHTML = ""; el.appendChild(svg);
+}
+
+function drawCompChart(data) {
+  const el = $("#chart-comp");
+  if (!data.length) return emptyChart(el, "Quiz scores land here once you've taken one.");
+  const s = chartScales(data, 0, 100);
+  const svg = svgEl(CHART.w, CHART.h);
+  chartFrame(svg, [0, 25, 50, 100], v => v + "%", s);
+  /* 75% gate line */
+  addNode(svg, "line", { x1: CHART.padL, x2: CHART.w - CHART.padR, y1: s.y(75), y2: s.y(75),
+    stroke: "var(--ink-3)", "stroke-width": 1, "stroke-dasharray": "4 4" });
+  const gl = addNode(svg, "text", { x: CHART.w - CHART.padR, y: s.y(75) - 5, "text-anchor": "end",
+    fill: "var(--ink-3)", "font-size": 11, "font-family": "var(--sans)" });
+  gl.textContent = "75% gate";
+
+  const bw = Math.min(26, Math.max(8, s.iw / data.length - 4));
+  data.forEach((e, i) => {
+    const cx = data.length === 1 ? CHART.padL + s.iw / 2 : s.x(i);
+    const yTop = s.y(e.comp), yBase = s.y(0);
+    const r = addNode(svg, "rect", {
+      x: (cx - bw / 2).toFixed(1), y: Math.min(yTop, yBase - 2).toFixed(1),
+      width: bw.toFixed(1), height: Math.max(2, yBase - yTop).toFixed(1),
+      rx: 3, fill: "var(--chart-2)"
+    });
+    r.addEventListener("mouseenter", ev => tipShow(ev, `${fmtDate(e.t)} · ${e.mode} — <strong>${e.comp}%</strong> · ${e.wpm} wpm`));
+    r.addEventListener("mousemove", tipMove);
+    r.addEventListener("mouseleave", tipHide);
+  });
+  el.innerHTML = ""; el.appendChild(svg);
+}
+
+function drawTable(log) {
+  const el = $("#prog-table");
+  if (!log.length) {
+    el.innerHTML = `<p class="empty">No sessions yet. Start with a speed test to set your baseline.</p>`;
+    return;
+  }
+  const rows = [...log].reverse().map(e => `
+    <tr>
+      <td>${fmtDate(e.t)}</td>
+      <td><span class="modechip">${e.mode}</span></td>
+      <td>${e.wpm}</td>
+      <td>${e.comp === null || e.comp === undefined ? "—" : e.comp + "%"}</td>
+      <td>${e.passage || ""}</td>
+    </tr>`).join("");
+  el.innerHTML = `<table class="log">
+    <tr><th>Date</th><th>Mode</th><th>wpm</th><th>Quiz</th><th>Text</th></tr>
+    ${rows}</table>`;
+}
+
+$("#prog-clear").addEventListener("click", () => {
+  if (confirm("Delete all logged sessions? This can't be undone.")) {
+    localStorage.removeItem(LOG_KEY);
+    renderProgress();
+    fillTestSelect();
+  }
+});
+</script>
+</body>
+</html>
