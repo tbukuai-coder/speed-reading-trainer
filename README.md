@@ -16,7 +16,9 @@ Evidence-based speed-reading training with a comprehension gate: speed only coun
 
 ## How fast is fast? Reading-speed benchmarks
 
-Reading rate is conventionally measured in **words per minute (WPM)**, not per second (nobody reads a whole page per second — that would be ~15,000 WPM). These bands classify a reader *at normal comprehension*; the numbers come from the same literature the app cites (Brysbaert 2019 meta-analysis; Rayner et al. 2016).
+Reading rate is conventionally measured in **words per minute (WPM)**, not per second (nobody reads a whole page per second — that would be ~15,000 WPM). These bands classify a reader *at normal comprehension*.
+
+> **Not an official standard.** There is no ISO or international standard for reading-speed classes. The *anchor* figures are research-based — the ~238 WPM average (non-fiction) is from Brysbaert's 2019 peer-reviewed meta-analysis, and the comprehension drop-off past ~500–600 WPM is from Rayner et al. 2016. The *band labels and exact cutoffs*, however, are a common synthesis of reading-education literature and popular sources, and different sources draw the lines at slightly different values. Treat them as a well-grounded rule of thumb, not a certification scale. (The nearest thing to a formal norm — Hasbrouck & Tindal oral-reading-fluency norms — covers K–12 *oral* reading in specific school systems, not general adult silent reading.)
 
 | Level | Words/min | ≈ Words/sec | ≈ Pages/min\* | What it is |
 |---|---|---:|---:|---|
